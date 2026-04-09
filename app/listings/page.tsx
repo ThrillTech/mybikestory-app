@@ -2,8 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/mbs-pricing";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 export default async function ListingsPage({
   searchParams,
 }: {
