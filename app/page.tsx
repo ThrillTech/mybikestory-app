@@ -127,17 +127,16 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-5 text-center text-sm text-gray-500">
+     <footer className="border-t border-gray-200 py-8 px-5 text-center text-sm text-gray-500">
         <p>
-          MyBikeStory is powered by{" "}
+          {"MyBikeStory is powered by "}
           
             href="https://bikeservicebook.com"
             className="text-green-600 hover:underline font-semibold"
           >
             Bike Service Book
-          </a>{" "}
-          — the service history platform for serious cyclists.
+          </a>
+          {" \u2014 the service history platform for serious cyclists."}
         </p>
       </footer>
     </main>
