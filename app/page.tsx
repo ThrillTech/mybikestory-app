@@ -106,14 +106,14 @@ export default function Home() {
             <img
               src="/MyBikeStory_logo.png"
               alt="MyBikeStory"
-              className="h-14 w-auto"
+              className="h-16 w-auto"
             />
             <span className="text-gray-300 text-2xl font-light">×</span>
             <a href="https://www.bikeservicebook.com" target="_blank" rel="noreferrer">
               <img
                 src="/BSB_flat logo_TM (1).png"
                 alt="Bike Service Book"
-                className="h-10 w-auto rounded-lg"
+                className="h-14 w-auto rounded-xl"
               />
             </a>
           </div>
