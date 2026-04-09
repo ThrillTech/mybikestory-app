@@ -49,7 +49,7 @@ export default function Home() {
             <div className="text-4xl mb-4">🔍</div>
             <h3 className="font-bold text-lg mb-2">Browse Listings</h3>
             <p className="text-gray-600 text-sm">
-              Find your next bike from verified sellers. Look for the BSB Verified
+              Find your next bike from verified sellers. Look for the Bike Service Book Verified
               badge for bikes with full service history.
             </p>
           </div>
@@ -65,21 +65,21 @@ export default function Home() {
             <div className="text-4xl mb-4">📋</div>
             <h3 className="font-bold text-lg mb-2">Transfer the History</h3>
             <p className="text-gray-600 text-sm">
-              Once sold, the bike&apos;s full BSB service history transfers into your
+              Once sold, the bike&apos;s full Bike Service Book service history transfers into your
               account for R99. Your bike&apos;s story continues.
             </p>
           </div>
         </div>
       </section>
 
-      {/* BSB Verified callout */}
+      {/* Bike Service Book Verified callout */}
       <section className="py-16 px-5" style={{ backgroundColor: "#EBF5FF" }}>
         <div className="max-w-4xl mx-auto text-center">
           <div
             className="inline-flex items-center gap-2 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6"
             style={{ backgroundColor: "#AA9F47" }}
           >
-            ✓ BSB Verified
+            ✓ Bike Service Book Verified
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Know Exactly What You&apos;re Buying
@@ -99,11 +99,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BSB Features — why buyers should use BSB */}
+      {/* Bike Service Book Features — why buyers should use Bike Service Book */}
       <section className="py-16 px-5 max-w-6xl mx-auto w-full">
         <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <img
+              src="/MyBikeStory_logo.png"
+              alt="MyBikeStory"
+              className="h-10 w-auto"
+            />
+            <span className="text-gray-300 text-2xl font-light">×</span>
+            <a href="https://www.bikeservicebook.com" target="_blank" rel="noreferrer">
+              <img
+                src="/BSB_flat logo_TM (1).png"
+                alt="Bike Service Book"
+                className="h-10 w-auto rounded-lg"
+              />
+            </a>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            Why Buy a BSB Verified Bike?
+            Why Buy a Bike Service Book Verified Bike?
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto text-sm">
             When you claim a bike&apos;s history into your Bike Service Book account,
@@ -194,7 +209,7 @@ export default function Home() {
 
         </div>
 
-        {/* BSB CTA */}
+        {/* Bike Service Book CTA */}
         <div
           className="mt-10 rounded-xl p-6 md:p-8 text-center"
           style={{ backgroundColor: "#EBF5FF" }}
