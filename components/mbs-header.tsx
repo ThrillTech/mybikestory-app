@@ -11,22 +11,22 @@ export default function MbsHeader() {
             className="h-20 w-auto"
           />
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Link
             href="/listings"
-            className="text-sm text-gray-600 hover:text-gray-900"
+            className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors"
           >
             Browse Bikes
           </Link>
           <Link
             href="/sell"
-            className="text-sm text-gray-600 hover:text-gray-900"
+            className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors"
           >
             Sell Your Bike
           </Link>
           <Link
             href="/auth/sign-in"
-            className="text-sm bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            className="text-sm font-semibold bg-[#2376BE] text-white px-5 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
           >
             Sign In
           </Link>
