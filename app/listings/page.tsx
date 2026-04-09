@@ -3,6 +3,7 @@ import { formatPrice } from "@/lib/mbs-pricing";
 import Link from "next/link";
 import { Suspense } from "react";
 import MbsHeader from "@/components/mbs-header";
+import MbsFooter from "@/components/mbs-footer";
 
 async function ListingsGrid({
   verified,
@@ -180,7 +181,8 @@ export default async function ListingsPage({
         >
           <ListingsGrid verified={params.verified} search={params.search} />
         </Suspense>
-      </div>
+    </div>
+      <MbsFooter />
     </main>
   );
 }
