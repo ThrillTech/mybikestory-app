@@ -216,23 +216,24 @@ export default function SellPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Asking price</span>
-                  <span className="font-semibold text-gray-900">R{priceRands.toLocaleString("en-ZA")}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Commission ({commission.ratePercent})</span>
-                  <span className="font-semibold text-red-500">− R{commission.commissionRands.toLocaleString("en-ZA")}</span>
+                  <span className="font-semibold text-gray-900">
+                    R{priceRands.toLocaleString("en-ZA")}
+                  </span>
                 </div>
                 <div className="flex justify-between border-t border-gray-200 pt-2">
-                  <span className="font-bold text-gray-900">You receive</span>
-                  <span className="font-bold text-lg" style={{ color: "#2376BE" }}>R{netReceived.toLocaleString("en-ZA")}</span>
+                  <span className="text-gray-600">
+                    Commission ({commission.ratePercent}) payable to MyBikeStory
+                  </span>
+                  <span className="font-semibold text-red-500">
+                    R{commission.commissionRands.toLocaleString("en-ZA")}
+                  </span>
                 </div>
-                <p className="text-xs text-gray-400">Commission payable when you mark the bike as sold. Buyer pays a separate R{TRANSFER_FEE_RANDS} ownership transfer fee.</p>
               </div>
-              <label className="flex items-start gap-3 cursor-pointer pt-1">
-                <input type="checkbox" checked={acceptedCommission} onChange={(e) => setAcceptedCommission(e.target.checked)} className="mt-0.5 w-4 h-4 rounded accent-[#2376BE]" />
-                <span className="text-xs text-gray-700">I understand and accept the commission structure above.</span>
-              </label>
-            </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 space-y-1.5">
+                <p className="font-semibold">⚠️ Important — please read before listing:</p>
+                <p>Commission is payable to MyBikeStory when you mark your bike as sold. Until commission is paid, the buyer cannot claim the Bike Service Book history into their account.</p>
+                <p>Bikes are tracked by serial number. If commission is unpaid, the bike&apos;s serial number will be flagged and cannot be registered on any new account — protecting both you and the buyer.</p>
+              </div>
           )}
 
           {/* T&C acceptance */}
