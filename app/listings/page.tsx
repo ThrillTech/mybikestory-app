@@ -109,8 +109,7 @@ export default async function ListingsPage({
       <header className="w-full border-b border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">🚲</span>
-            <span className="font-bold text-xl text-gray-900">MyBikeStory</span>
+            <img src="/MyBikeStory_logo.png" alt="MyBikeStory" className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-4">
             <Link
