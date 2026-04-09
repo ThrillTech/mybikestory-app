@@ -1,13 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/mbs-pricing";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default async function ListingsPage({
-  searchParams,
+async function ListingsGrid({
+  verified,
+  search,
 }: {
-  searchParams: Promise<{ verified?: string; search?: string }>;
+  verified?: string;
+  search?: string;
 }) {
-  const params = await searchParams;
   const supabase = await createClient();
 
   let query = supabase
@@ -16,27 +18,100 @@ export default async function ListingsPage({
     .eq("status", "active")
     .order("created_at", { ascending: false });
 
-  if (params.verified === "true") {
+  if (verified === "true") {
     query = query.eq("has_bsb_history", true);
   }
 
-  if (params.search) {
-    query = query.ilike("title", `%${params.search}%`);
+  if (search) {
+    query = query.ilike("title", `%${search}%`);
   }
 
   const { data: listings, error } = await query;
+
+  if (error) {
+    return (
+      <p className="text-red-500 text-sm">
+        Failed to load listings. Please try again.
+      </p>
+    );
+  }
+
+  if (!listings || listings.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <div className="text-5xl mb-4">🚲</div>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">
+          No bikes listed yet
+        </h2>
+        <p className="text-gray-500 mb-6">
+          Be the first to list your bike for sale.
+        </p>
+        <Link
+          href="/sell"
+          className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
+        >
+          List Your Bike
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {listings.map((listing) => (
+        <Link
+          key={listing.id}
+          href={`/listings/${listing.id}`}
+          className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+        >
+          <div className="h-48 bg-gray-100 flex items-center justify-center">
+            <span className="text-5xl">🚲</span>
+          </div>
+          <div className="p-4">
+            {listing.has_bsb_history && (
+              <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">
+                ✓ BSB Verified
+              </span>
+            )}
+            <h3 className="font-semibold text-gray-900 mb-1">
+              {listing.title}
+            </h3>
+            <p className="text-gray-500 text-sm mb-3 line-clamp-2">
+              {listing.description}
+            </p>
+            <div className="flex items-center justify-between">
+              <span className="text-xl font-bold text-gray-900">
+                {formatPrice(listing.price)}
+              </span>
+              {listing.location && (
+                <span className="text-xs text-gray-400">
+                  📍 {listing.location}
+                </span>
+              )}
+            </div>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+export default async function ListingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verified?: string; search?: string }>;
+}) {
+  const params = await searchParams;
 
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="w-full border-b border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl">🚲</span>
-              <span className="font-bold text-xl text-gray-900">MyBikeStory</span>
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl">🚲</span>
+            <span className="font-bold text-xl text-gray-900">MyBikeStory</span>
+          </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/sell"
@@ -104,71 +179,16 @@ export default async function ListingsPage({
           </div>
         </form>
 
-        {/* Listings grid */}
-        {error && (
-          <p className="text-red-500 text-sm">
-            Failed to load listings. Please try again.
-          </p>
-        )}
-
-        {!error && listings && listings.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-5xl mb-4">🚲</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              No bikes listed yet
-            </h2>
-            <p className="text-gray-500 mb-6">
-              Be the first to list your bike for sale.
-            </p>
-            <Link
-              href="/sell"
-              className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
-            >
-              List Your Bike
-            </Link>
-          </div>
-        )}
-
-        {!error && listings && listings.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {listings.map((listing) => (
-              <Link
-                key={listing.id}
-                href={`/listings/${listing.id}`}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-              >
-                {/* Placeholder image */}
-                <div className="h-48 bg-gray-100 flex items-center justify-center">
-                  <span className="text-5xl">🚲</span>
-                </div>
-
-                <div className="p-4">
-                  {listing.has_bsb_history && (
-                    <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">
-                      ✓ BSB Verified
-                    </span>
-                  )}
-                  <h3 className="font-semibold text-gray-900 mb-1">
-                    {listing.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm mb-3 line-clamp-2">
-                    {listing.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold text-gray-900">
-                      {formatPrice(listing.price)}
-                    </span>
-                    {listing.location && (
-                      <span className="text-xs text-gray-400">
-                        📍 {listing.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        {/* Listings */}
+        <Suspense
+          fallback={
+            <div className="text-center py-20 text-gray-400">
+              Loading bikes...
+            </div>
+          }
+        >
+          <ListingsGrid verified={params.verified} search={params.search} />
+        </Suspense>
       </div>
     </main>
   );
