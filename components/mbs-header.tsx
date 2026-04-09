@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function MbsHeader() {
   return (
     <header className="w-full border-b border-gray-200 bg-white">
-      <div className="max-w-6xl mx-auto px-5 h-20 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-5 h-25 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <img
             src="/MyBikeStory_logo.png"
