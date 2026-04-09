@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --mbs-blue: #2376BE;
@@ -10,71 +12,6 @@
   --mbs-silver: #BCC0C4;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: var(--font-poppins), sans-serif;
-}
-
-/* Brand utility classes */
-.btn-primary {
-  background-color: var(--mbs-blue);
-  color: white;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: background-color 0.2s;
-  display: inline-block;
-}
-
-.btn-primary:hover {
-  background-color: var(--mbs-blue-dark);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--mbs-blue);
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  border: 2px solid var(--mbs-blue);
-  transition: all 0.2s;
-  display: inline-block;
-}
-
-.btn-secondary:hover {
-  background-color: var(--mbs-blue);
-  color: white;
-}
-
-.verified-badge {
-  background-color: var(--mbs-green);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.text-brand-blue {
-  color: var(--mbs-blue);
-}
-
-.text-brand-green {
-  color: var(--mbs-green);
-}
-
-.bg-brand-blue {
-  background-color: var(--mbs-blue);
-}
-
-.bg-brand-green {
-  background-color: var(--mbs-green);
 }
