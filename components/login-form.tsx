@@ -1,5 +1,4 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -31,15 +30,13 @@ export function LoginForm({
     const supabase = createClient();
     setIsLoading(true);
     setError(null);
-
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
+      router.push("/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -50,10 +47,15 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+        <CardHeader className="text-center">
+          <img
+            src="/MyBikeStory_logo.png"
+            alt="MyBikeStory"
+            className="h-16 w-auto mx-auto mb-2"
+          />
+          <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Sign in to your MyBikeStory account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -64,7 +66,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -76,6 +78,7 @@ export function LoginForm({
                   <Link
                     href="/auth/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    style={{ color: "#2376BE" }}
                   >
                     Forgot your password?
                   </Link>
@@ -89,17 +92,31 @@ export function LoginForm({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Login"}
+              <Button
+                type="submit"
+                className="w-full text-white font-semibold"
+                style={{ backgroundColor: "#2376BE" }}
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              {"Don't have an account? "}
               <Link
                 href="/auth/sign-up"
-                className="underline underline-offset-4"
+                className="underline underline-offset-4 font-semibold"
+                style={{ color: "#2376BE" }}
               >
-                Sign up
+                Sign up free
+              </Link>
+            </div>
+            <div className="mt-3 text-center text-sm">
+              <Link
+                href="/listings"
+                className="text-gray-400 hover:text-gray-600 text-xs"
+              >
+                Browse bikes without signing in
               </Link>
             </div>
           </form>
