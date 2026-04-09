@@ -7,7 +7,7 @@ export default function Home() {
       <header className="w-full border-b border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/MyBikeStory_logo.png" alt="MyBikeStory" className="h-10 w-auto" />
+            <img src="/MyBikeStory_logo.png" alt="MyBikeStory" className="h-16 w-auto" />
           </div>
           <div className="flex items-center gap-4">
             <Link href="/listings" className="text-sm text-gray-600 hover:text-gray-900">
