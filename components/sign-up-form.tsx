@@ -91,7 +91,7 @@ export function SignUpForm({
           <img
             src="/MyBikeStory_logo.png"
             alt="MyBikeStory"
-            className="h-16 w-auto mx-auto mb-2"
+            className="h-24 w-auto mx-auto mb-2"
           />
           <CardTitle className="text-2xl">Create your account</CardTitle>
           <CardDescription>
