@@ -1,5 +1,4 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,7 @@ export function SignUpForm({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
       });
       if (error) throw error;
@@ -59,28 +58,33 @@ export function SignUpForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+        <CardHeader className="text-center">
+          <img
+            src="/MyBikeStory_logo.png"
+            alt="MyBikeStory"
+            className="h-16 w-auto mx-auto mb-2"
+          />
+          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardDescription>
+            Free to join. List and buy bikes with verified history.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -90,9 +94,7 @@ export function SignUpForm({
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="repeat-password">Repeat Password</Label>
-                </div>
+                <Label htmlFor="repeat-password">Repeat Password</Label>
                 <Input
                   id="repeat-password"
                   type="password"
@@ -102,14 +104,31 @@ export function SignUpForm({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
+              <Button
+                type="submit"
+                className="w-full text-white font-semibold"
+                style={{ backgroundColor: "#2376BE" }}
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating account..." : "Create Free Account"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
-                Login
+              {"Already have an account? "}
+              <Link
+                href="/auth/login"
+                className="underline underline-offset-4 font-semibold"
+                style={{ color: "#2376BE" }}
+              >
+                Sign in
+              </Link>
+            </div>
+            <div className="mt-3 text-center text-sm">
+              <Link
+                href="/listings"
+                className="text-gray-400 hover:text-gray-600 text-xs"
+              >
+                Browse bikes without signing up
               </Link>
             </div>
           </form>
