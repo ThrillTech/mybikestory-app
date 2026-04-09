@@ -1,5 +1,6 @@
 import Link from "next/link";
 import MbsHeader from "@/components/mbs-header";
+import MbsFooter from "@/components/mbs-footer";
 
 export default function Home() {
   return (
@@ -98,8 +99,127 @@ export default function Home() {
         </div>
       </section>
 
+      {/* BSB Features — why buyers should use BSB */}
+      <section className="py-16 px-5 max-w-6xl mx-auto w-full">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Why Buy a BSB Verified Bike?
+          </h2>
+          <p className="text-gray-500 max-w-2xl mx-auto text-sm">
+            When you claim a bike&apos;s history into your Bike Service Book account,
+            you get far more than a receipt. Here&apos;s what comes with every verified bike.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* Feature 1 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">📋</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Complete Service History</h3>
+              <p className="text-gray-500 text-sm">
+                Every service, replacement, and upgrade documented in a verified
+                service book. Proof of proper maintenance when you need it most —
+                for warranty claims, resale, or insurance.
+              </p>
+            </div>
+          </div>
+
+          {/* Feature 2 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">🏷️</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Proof of Ownership</h3>
+              <p className="text-gray-500 text-sm">
+                Your bike&apos;s serial number, registered in your service book under
+                your name. If your bike is stolen and recovered, you have documented
+                proof it belongs to you — something a receipt alone can&apos;t always provide.
+              </p>
+            </div>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">🔔</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Never Miss a Service</h3>
+              <p className="text-gray-500 text-sm">
+                Get reminders when components need servicing based on actual usage.
+                Your service book keeps you on schedule — protecting performance
+                and preventing expensive failures.
+              </p>
+            </div>
+          </div>
+
+          {/* Feature 4 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">🚴</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Strava Integration</h3>
+              <p className="text-gray-500 text-sm">
+                Connect Strava to automatically log riding hours. Your service book
+                updates with every ride — no manual entry required. Know exactly
+                when each component needs attention.
+              </p>
+            </div>
+          </div>
+
+          {/* Feature 5 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">📄</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Downloadable PDF Report</h3>
+              <p className="text-gray-500 text-sm">
+                Generate a professional service history PDF at any time. Share it
+                with a buyer, attach it to an insurance claim, or keep it for your
+                records. Your entire bike history in one clean, shareable document.
+              </p>
+            </div>
+          </div>
+
+          {/* Feature 6 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+            <div className="text-3xl shrink-0">🛡️</div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-1">Insurance Claims Made Easy</h3>
+              <p className="text-gray-500 text-sm">
+                In the event of theft or damage, insurers need proof of ownership
+                and value. Your Bike Service Book provides a timestamped record
+                with serial number, photos, and full history — everything your
+                insurer needs to process a claim quickly.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* BSB CTA */}
+        <div
+          className="mt-10 rounded-xl p-6 md:p-8 text-center"
+          style={{ backgroundColor: "#EBF5FF" }}
+        >
+          <h3 className="font-bold text-gray-900 text-lg mb-2">
+            Start Your Free Bike Service Book
+          </h3>
+          <p className="text-gray-500 text-sm max-w-xl mx-auto mb-6">
+            Track your new bike&apos;s service history, prove ownership, and protect
+            your investment. Free to start — no credit card required.
+          </p>
+          <a
+            href="https://www.bikeservicebook.com"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+            style={{ backgroundColor: "#2376BE" }}
+          >
+            Visit Bike Service Book →
+          </a>
+        </div>
+      </section>
+
       {/* Sell CTA */}
-      <section className="py-16 px-5 text-center">
+      <section className="py-16 px-5 text-center" style={{ backgroundColor: "#EBF5FF" }}>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
           Selling Your Bike?
         </h2>
@@ -117,13 +237,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-5 text-center text-sm text-gray-500">
-        <p>
-          MyBikeStory is powered by Bike Service Book — the service history
-          platform for serious cyclists.
-        </p>
-      </footer>
+      <MbsFooter />
     </main>
   );
 }
