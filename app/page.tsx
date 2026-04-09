@@ -11,10 +11,7 @@ export default function Home() {
             <span className="font-bold text-xl text-gray-900">MyBikeStory</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link
-              href="/listings"
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
+            <Link href="/listings" className="text-sm text-gray-600 hover:text-gray-900">
               Browse Bikes
             </Link>
             <Link
@@ -30,12 +27,13 @@ export default function Home() {
       {/* Hero */}
       <section className="bg-gradient-to-b from-green-50 to-white py-20 px-5 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          Buy & Sell Bikes with<br />
+          Buy &amp; Sell Bikes with
+          <br />
           <span className="text-green-600">Verified History</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-          South Africa's only second-hand bike marketplace where the full service
-          history transfers with the bike. No more guessing what you're buying.
+          South Africa&apos;s only second-hand bike marketplace where the full service
+          history transfers with the bike. No more guessing what you&apos;re buying.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -63,24 +61,24 @@ export default function Home() {
             <div className="text-4xl mb-4">🔍</div>
             <h3 className="font-bold text-lg mb-2">Browse Listings</h3>
             <p className="text-gray-600 text-sm">
-              Find your next bike from verified sellers. Look for the BSB
-              Verified badge for bikes with full service history.
+              Find your next bike from verified sellers. Look for the BSB Verified
+              badge for bikes with full service history.
             </p>
           </div>
           <div className="text-center">
             <div className="text-4xl mb-4">🤝</div>
             <h3 className="font-bold text-lg mb-2">Deal Directly</h3>
             <p className="text-gray-600 text-sm">
-              Contact the seller, arrange viewing and payment privately.
-              No middleman, no escrow — just honest transactions.
+              Contact the seller, arrange viewing and payment privately. No
+              middleman, no escrow — just honest transactions.
             </p>
           </div>
           <div className="text-center">
             <div className="text-4xl mb-4">📋</div>
             <h3 className="font-bold text-lg mb-2">Transfer the History</h3>
             <p className="text-gray-600 text-sm">
-              Once sold, the bike's full BSB service history transfers into
-              your account for R99. Your bike's story continues.
+              Once sold, the bike&apos;s full BSB service history transfers into your
+              account for R99. Your bike&apos;s story continues.
             </p>
           </div>
         </div>
@@ -93,12 +91,12 @@ export default function Home() {
             ✓ BSB Verified
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Know Exactly What You're Buying
+            Know Exactly What You&apos;re Buying
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-8">
             Bikes listed from Bike Service Book users carry a verified service
-            history — every service, every component, every shop stamp. It's
-            the CarFax for bicycles.
+            history — every service, every component, every shop stamp. It&apos;s the
+            CarFax for bicycles.
           </p>
           <Link
             href="/listings?verified=true"
@@ -111,13 +109,11 @@ export default function Home() {
 
       {/* Sell CTA */}
       <section className="py-16 px-5 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Selling Your Bike?
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Selling Your Bike?</h2>
         <p className="text-gray-600 max-w-xl mx-auto mb-8">
           List for free. If your bike is in Bike Service Book, your listing
-          auto-fills with your full service history — giving buyers the
-          confidence to pay your asking price.
+          auto-fills with your full service history — giving buyers the confidence
+          to pay your asking price.
         </p>
         <Link
           href="/sell"
@@ -127,16 +123,11 @@ export default function Home() {
         </Link>
       </section>
 
-     <footer className="border-t border-gray-200 py-8 px-5 text-center text-sm text-gray-500">
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-8 px-5 text-center text-sm text-gray-500">
         <p>
-          {"MyBikeStory is powered by "}
-          
-            href="https://bikeservicebook.com"
-            className="text-green-600 hover:underline font-semibold"
-          >
-            Bike Service Book
-          </a>
-          {" \u2014 the service history platform for serious cyclists."}
+          MyBikeStory is powered by Bike Service Book — the service history
+          platform for serious cyclists.
         </p>
       </footer>
     </main>
