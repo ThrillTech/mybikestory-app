@@ -49,7 +49,8 @@ async function ListingsGrid({
         </p>
         <Link
           href="/sell"
-          className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
+          className="text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+          style={{ backgroundColor: "#2376BE" }}
         >
           List Your Bike
         </Link>
@@ -70,7 +71,10 @@ async function ListingsGrid({
           </div>
           <div className="p-4">
             {listing.has_bsb_history && (
-              <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">
+              <span
+                className="inline-flex items-center gap-1 text-white text-xs font-semibold px-2 py-1 rounded-full mb-2"
+                style={{ backgroundColor: "#AA9F47" }}
+              >
                 ✓ BSB Verified
               </span>
             )}
@@ -81,7 +85,7 @@ async function ListingsGrid({
               {listing.description}
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold" style={{ color: "#2376BE" }}>
                 {formatPrice(listing.price)}
               </span>
               {listing.location && (
@@ -115,21 +119,27 @@ export default async function ListingsPage({
           <div className="flex items-center gap-3">
             <Link
               href="/listings"
-              className={`text-sm px-4 py-2 rounded-full border ${
+              className={`text-sm px-4 py-2 rounded-full border font-medium transition-colors ${
                 !params.verified
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-gray-900"
+                  ? "text-white border-[#2376BE]"
+                  : "bg-white text-gray-600 border-gray-300 hover:border-[#2376BE]"
               }`}
+              style={!params.verified ? { backgroundColor: "#2376BE" } : {}}
             >
               All Bikes
             </Link>
             <Link
               href="/listings?verified=true"
-              className={`text-sm px-4 py-2 rounded-full border flex items-center gap-1 ${
+              className={`text-sm px-4 py-2 rounded-full border font-medium flex items-center gap-1 transition-colors ${
                 params.verified === "true"
-                  ? "bg-green-600 text-white border-green-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-green-600"
+                  ? "text-white border-[#AA9F47]"
+                  : "bg-white text-gray-600 border-gray-300 hover:border-[#AA9F47]"
               }`}
+              style={
+                params.verified === "true"
+                  ? { backgroundColor: "#AA9F47" }
+                  : {}
+              }
             >
               ✓ BSB Verified
             </Link>
@@ -144,14 +154,16 @@ export default async function ListingsPage({
               name="search"
               defaultValue={params.search}
               placeholder="Search by brand, model..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2"
+              style={{ focusRingColor: "#2376BE" } as React.CSSProperties}
             />
             {params.verified && (
               <input type="hidden" name="verified" value="true" />
             )}
             <button
               type="submit"
-              className="bg-gray-900 text-white px-6 py-2 rounded-lg text-sm hover:bg-gray-700"
+              className="text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
+              style={{ backgroundColor: "#2376BE" }}
             >
               Search
             </button>
