@@ -4,14 +4,14 @@ import MbsHeader from "@/components/mbs-header";
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
-    <MbsHeader />
+      <MbsHeader />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-green-50 to-white py-20 px-5 text-center">
+      <section className="bg-gradient-to-b from-blue-50 to-white py-20 px-5 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
           Buy &amp; Sell Bikes with
           <br />
-          <span className="text-green-600">Verified History</span>
+          <span style={{ color: "#2376BE" }}>Verified History</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
           South Africa&apos;s only second-hand bike marketplace where the full service
@@ -20,13 +20,15 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/listings"
-            className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 text-lg"
+            className="text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors"
+            style={{ backgroundColor: "#2376BE" }}
           >
             Browse Bikes
           </Link>
           <Link
             href="/sell"
-            className="border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 text-lg"
+            className="px-8 py-3 rounded-lg font-semibold text-lg border-2 transition-colors hover:text-white"
+            style={{ borderColor: "#2376BE", color: "#2376BE" }}
           >
             Sell Your Bike
           </Link>
@@ -67,9 +69,12 @@ export default function Home() {
       </section>
 
       {/* BSB Verified callout */}
-      <section className="bg-green-50 py-16 px-5">
+      <section className="py-16 px-5" style={{ backgroundColor: "#f0f7ff" }}>
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <div
+            className="inline-flex items-center gap-2 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6"
+            style={{ backgroundColor: "#AA9F47" }}
+          >
             ✓ BSB Verified
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -82,7 +87,8 @@ export default function Home() {
           </p>
           <Link
             href="/listings?verified=true"
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
+            className="text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+            style={{ backgroundColor: "#2376BE" }}
           >
             View Verified Listings
           </Link>
@@ -99,7 +105,8 @@ export default function Home() {
         </p>
         <Link
           href="/sell"
-          className="bg-gray-900 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700"
+          className="text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+          style={{ backgroundColor: "#2376BE" }}
         >
           List Your Bike — Free
         </Link>
