@@ -122,7 +122,7 @@ export function SignUpForm({
                   <select
                     value={phonePrefix}
                     onChange={(e) => setPhonePrefix(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white w-28 shrink-0 focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
+                    className="px-2 py-2 border border-gray-300 rounded-lg text-sm bg-white w-24 shrink-0 focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
                   >
                     {COUNTRY_CODES.map((c) => (
                       <option key={c.code} value={c.code}>
