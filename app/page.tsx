@@ -7,7 +7,10 @@ export default function Home() {
       <MbsHeader />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-50 to-white py-20 px-5 text-center">
+      <section
+        className="py-20 px-5 text-center"
+        style={{ background: "linear-gradient(to bottom, #EBF5FF, white)" }}
+      >
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
           Buy &amp; Sell Bikes with
           <br />
@@ -27,7 +30,7 @@ export default function Home() {
           </Link>
           <Link
             href="/sell"
-            className="px-8 py-3 rounded-lg font-semibold text-lg border-2 transition-colors hover:text-white"
+            className="px-8 py-3 rounded-lg font-semibold text-lg border-2 transition-colors"
             style={{ borderColor: "#2376BE", color: "#2376BE" }}
           >
             Sell Your Bike
@@ -69,7 +72,7 @@ export default function Home() {
       </section>
 
       {/* BSB Verified callout */}
-      <section className="py-16 px-5" style={{ backgroundColor: "#f0f7ff" }}>
+      <section className="py-16 px-5" style={{ backgroundColor: "#EBF5FF" }}>
         <div className="max-w-4xl mx-auto text-center">
           <div
             className="inline-flex items-center gap-2 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6"
@@ -97,11 +100,13 @@ export default function Home() {
 
       {/* Sell CTA */}
       <section className="py-16 px-5 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Selling Your Bike?</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          Selling Your Bike?
+        </h2>
         <p className="text-gray-600 max-w-xl mx-auto mb-8">
           List for free. If your bike is in Bike Service Book, your listing
-          auto-fills with your full service history — giving buyers the confidence
-          to pay your asking price.
+          auto-fills with your full service history — giving buyers the
+          confidence to pay your asking price.
         </p>
         <Link
           href="/sell"
