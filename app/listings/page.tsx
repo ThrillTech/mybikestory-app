@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/mbs-pricing";
 import Link from "next/link";
 import { Suspense } from "react";
+import MbsHeader from "@/components/mbs-header";
 
 async function ListingsGrid({
   verified,
@@ -105,28 +106,7 @@ export default async function ListingsPage({
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="w-full border-b border-gray-200 bg-white">
-        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/MyBikeStory_logo.png" alt="MyBikeStory" className="h-14 w-auto" />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/sell"
-              className="text-sm bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-            >
-              Sell Your Bike
-            </Link>
-            <Link
-              href="/auth/sign-in"
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Sign In
-            </Link>
-          </div>
-        </div>
-      </header>
+      <MbsHeader />
 
       <div className="max-w-6xl mx-auto px-5 py-8">
         {/* Page title + filters */}
