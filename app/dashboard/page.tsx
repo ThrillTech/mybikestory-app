@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Link
-                    href={`/listings/${listing.id}`}
+                    href={"/listings/" + listing.id}
                     className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg"
                   >
                     View
