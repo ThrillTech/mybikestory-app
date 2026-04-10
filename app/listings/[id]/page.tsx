@@ -320,7 +320,7 @@ export default async function ListingPage({
               </p>
               {listing.contact_email && (
                 
-                  href={`mailto:${listing.contact_email}?subject=Enquiry: ${listing.title}`}
+                  href={`mailto:${listing.contact_email}?subject=${encodeURIComponent("Enquiry: " + listing.title)}`}
                   className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
                   style={{ backgroundColor: "#2376BE" }}
                 >
