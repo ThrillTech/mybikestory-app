@@ -21,17 +21,14 @@ export default async function ListingPage({
 
   if (error || !listing) notFound();
 
-  // Get logged in user to show edit button
   const { data: { user } } = await supabase.auth.getUser();
   const isOwner = user?.id === listing.user_id;
 
-  // Increment view count
   await supabase
     .from("listings")
     .update({ views: (listing.views || 0) + 1 })
     .eq("id", id);
 
-  // Fetch BSB data if linked
   let bsbBike = null;
   let serviceEvents: any[] = [];
   let components: any[] = [];
@@ -60,13 +57,17 @@ export default async function ListingPage({
   }
 
   const images: string[] = listing.images || [];
+  const mailtoHref = listing.contact_email
+    ? "mailto:" + listing.contact_email + "?subject=Enquiry%3A%20" + encodeURIComponent(listing.title)
+    : null;
+  const telHref = listing.contact_phone ? "tel:" + listing.contact_phone : null;
 
   return (
     <main className="min-h-screen bg-gray-50">
       <MbsHeader />
 
       <div className="max-w-4xl mx-auto px-5 py-8">
-        {/* Back link */}
+
         <div className="flex items-center justify-between mb-6">
           <Link
             href="/listings"
@@ -76,7 +77,7 @@ export default async function ListingPage({
           </Link>
           {isOwner && (
             <Link
-              href={`/listings/${id}/edit`}
+              href={"/listings/" + id + "/edit"}
               className="text-sm font-semibold px-4 py-2 rounded-lg border-2 transition-colors"
               style={{ borderColor: "#2376BE", color: "#2376BE" }}
             >
@@ -86,14 +87,14 @@ export default async function ListingPage({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left — main content */}
+
+          {/* Left */}
           <div className="md:col-span-2 space-y-4">
 
             {/* Photo gallery */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               {images.length > 0 ? (
                 <div>
-                  {/* Cover image */}
                   <div className="h-72 w-full">
                     <img
                       src={images[0]}
@@ -101,14 +102,13 @@ export default async function ListingPage({
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  {/* Thumbnail strip */}
                   {images.length > 1 && (
                     <div className="flex gap-2 p-2 overflow-x-auto">
                       {images.map((src: string, i: number) => (
                         <img
                           key={i}
                           src={src}
-                          alt={`Photo ${i + 1}`}
+                          alt={"Photo " + (i + 1)}
                           className="h-16 w-16 object-cover rounded-lg border border-gray-200 shrink-0"
                         />
                       ))}
@@ -135,15 +135,12 @@ export default async function ListingPage({
                   </span>
                 )}
               </div>
-
               <p className="text-3xl font-bold mb-4" style={{ color: "#2376BE" }}>
                 {formatPrice(listing.price)}
               </p>
-
               {listing.location && (
                 <p className="text-sm text-gray-500 mb-4">📍 {listing.location}</p>
               )}
-
               <div className="border-t border-gray-100 pt-4">
                 <h2 className="font-semibold text-gray-900 mb-2">Description</h2>
                 <p className="text-gray-600 text-sm whitespace-pre-line">{listing.description}</p>
@@ -153,9 +150,7 @@ export default async function ListingPage({
             {/* BSB Bike Specs */}
             {bsbBike && (
               <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h2 className="font-semibold text-gray-900 mb-4">
-                  🚲 Bike Specifications
-                </h2>
+                <h2 className="font-semibold text-gray-900 mb-4">🚲 Bike Specifications</h2>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   {bsbBike.brand && (
                     <div>
@@ -234,7 +229,7 @@ export default async function ListingPage({
                         )}
                         {event.cost && (
                           <p className="text-xs text-gray-400 mt-0.5">
-                            Cost: R{Number(event.cost).toLocaleString("en-ZA")}
+                            {"Cost: R" + Number(event.cost).toLocaleString("en-ZA")}
                           </p>
                         )}
                       </div>
@@ -265,13 +260,14 @@ export default async function ListingPage({
                       <div className="text-right">
                         {(c.my_status || c.status) && (
                           <span
-                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                              (c.my_status || c.status) === "ok"
+                            className={
+                              "text-xs font-semibold px-2 py-0.5 rounded-full " +
+                              ((c.my_status || c.status) === "ok"
                                 ? "bg-green-100 text-green-700"
                                 : (c.my_status || c.status) === "due"
                                 ? "bg-amber-100 text-amber-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+                                : "bg-red-100 text-red-700")
+                            }
                           >
                             {(c.my_status || c.status) === "ok"
                               ? "✓ Good"
@@ -282,8 +278,7 @@ export default async function ListingPage({
                         )}
                         {c.last_serviced_date && (
                           <p className="text-xs text-gray-400 mt-0.5">
-                            Last:{" "}
-                            {new Date(c.last_serviced_date).toLocaleDateString("en-ZA", {
+                            {"Last: " + new Date(c.last_serviced_date).toLocaleDateString("en-ZA", {
                               month: "short",
                               year: "numeric",
                             })}
@@ -315,24 +310,20 @@ export default async function ListingPage({
             <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-4">
               <h2 className="font-semibold text-gray-900 mb-4">Contact Seller</h2>
               <p className="text-xs text-gray-500 mb-4">
-                Arrange viewing and payment directly with the seller. MyBikeStory
-                does not handle payments.
+                Arrange viewing and payment directly with the seller. MyBikeStory does not handle payments.
               </p>
-              {listing.contact_email && (() => {
-                const mailtoHref = "mailto:" + listing.contact_email + "?subject=Enquiry%3A%20" + encodeURIComponent(listing.title);
-                return (
-                  
-                    href={mailtoHref}
-                    className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
-                    style={{ backgroundColor: "#2376BE" }}
-                  >
-                    ✉️ Email Seller
-                  </a>
-                );
-              })()}
-              {listing.contact_phone && (
+              {mailtoHref && (
                 
-                  href={`tel:${listing.contact_phone}`}
+                  href={mailtoHref}
+                  className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
+                  style={{ backgroundColor: "#2376BE" }}
+                >
+                  ✉️ Email Seller
+                </a>
+              )}
+              {telHref && (
+                
+                  href={telHref}
                   className="w-full py-3 rounded-lg font-semibold text-sm border-2 flex items-center justify-center gap-2"
                   style={{ borderColor: "#2376BE", color: "#2376BE" }}
                 >
@@ -350,12 +341,13 @@ export default async function ListingPage({
                   Ownership Transfer — R99
                 </p>
                 <p className="text-xs text-gray-500">
-                  Once you&apos;ve bought this bike, pay R99 to officially transfer
+                  Once you have bought this bike, pay R99 to officially transfer
                   the service history into your BSB account.
                 </p>
               </div>
             )}
           </div>
+
         </div>
       </div>
     </main>
