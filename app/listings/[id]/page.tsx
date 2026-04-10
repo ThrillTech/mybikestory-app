@@ -341,8 +341,7 @@ export default async function ListingPage({
                   Ownership Transfer — R99
                 </p>
                 <p className="text-xs text-gray-500">
-                  Once you have bought this bike, pay R99 to officially transfer
-                  the service history into your BSB account.
+                 {"Once you've bought this bike, pay R99 to officially transfer the service history into your BSB account."}
                 </p>
               </div>
             )}
