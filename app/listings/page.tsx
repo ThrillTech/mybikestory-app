@@ -25,7 +25,7 @@ async function ListingsGrid({
   }
 
   if (search) {
-    query = query.ilike("title", `%${search}%`);
+    query = query.ilike("title", "%" + search + "%");
   }
 
   const { data: listings, error } = await query;
@@ -64,11 +64,19 @@ async function ListingsGrid({
       {listings.map((listing) => (
         <Link
           key={listing.id}
-          href={`/listings/${listing.id}`}
+          href={"/listings/" + listing.id}
           className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
         >
-          <div className="h-48 bg-gray-100 flex items-center justify-center">
-            <span className="text-5xl">🚲</span>
+          <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+            {listing.images && listing.images.length > 0 ? (
+              <img
+                src={listing.images[0]}
+                alt={listing.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-5xl">🚲</span>
+            )}
           </div>
           <div className="p-4">
             {listing.has_bsb_history && (
@@ -114,28 +122,29 @@ export default async function ListingsPage({
       <MbsHeader />
 
       <div className="max-w-6xl mx-auto px-5 py-8">
-        {/* Page title + filters */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Browse Bikes</h1>
           <div className="flex items-center gap-3">
             <Link
               href="/listings"
-              className={`text-sm px-4 py-2 rounded-full border font-medium transition-colors ${
-                !params.verified
+              className={
+                "text-sm px-4 py-2 rounded-full border font-medium transition-colors " +
+                (!params.verified
                   ? "text-white border-[#2376BE]"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-[#2376BE]"
-              }`}
+                  : "bg-white text-gray-600 border-gray-300 hover:border-[#2376BE]")
+              }
               style={!params.verified ? { backgroundColor: "#2376BE" } : {}}
             >
               All Bikes
             </Link>
             <Link
               href="/listings?verified=true"
-              className={`text-sm px-4 py-2 rounded-full border font-medium flex items-center gap-1 transition-colors ${
-                params.verified === "true"
+              className={
+                "text-sm px-4 py-2 rounded-full border font-medium flex items-center gap-1 transition-colors " +
+                (params.verified === "true"
                   ? "text-white border-[#AA9F47]"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-[#AA9F47]"
-              }`}
+                  : "bg-white text-gray-600 border-gray-300 hover:border-[#AA9F47]")
+              }
               style={
                 params.verified === "true"
                   ? { backgroundColor: "#AA9F47" }
@@ -155,8 +164,7 @@ export default async function ListingsPage({
               name="search"
               defaultValue={params.search}
               placeholder="Search by brand, model..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2"
-              style={{ focusRingColor: "#2376BE" } as React.CSSProperties}
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
             />
             {params.verified && (
               <input type="hidden" name="verified" value="true" />
@@ -181,7 +189,7 @@ export default async function ListingsPage({
         >
           <ListingsGrid verified={params.verified} search={params.search} />
         </Suspense>
-    </div>
+      </div>
       <MbsFooter />
     </main>
   );
