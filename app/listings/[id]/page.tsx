@@ -313,22 +313,22 @@ export default async function ListingPage({
                 Arrange viewing and payment directly with the seller. MyBikeStory does not handle payments.
               </p>
               {mailtoHref && (
-                
+                <Link
                   href={mailtoHref}
                   className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
                   style={{ backgroundColor: "#2376BE" }}
                 >
                   ✉️ Email Seller
-                </a>
+                </Link>
               )}
               {telHref && (
-                
+                <Link
                   href={telHref}
                   className="w-full py-3 rounded-lg font-semibold text-sm border-2 flex items-center justify-center gap-2"
                   style={{ borderColor: "#2376BE", color: "#2376BE" }}
                 >
                   📞 {listing.contact_phone}
-                </a>
+                </Link>
               )}
               <div className="border-t border-gray-100 mt-4 pt-4">
                 <p className="text-xs text-gray-400 text-center">{listing.views || 0} views</p>
