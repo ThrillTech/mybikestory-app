@@ -93,7 +93,7 @@ export default function SellPage() {
     if (bike.brand && bike.model) descParts.push(`${bike.brand} ${bike.model}`);
     if (bike.year) descParts.push(`Year: ${bike.year}`);
     if (bike.condition) descParts.push(`Condition: ${bike.condition}`);
-    if (bike.current_hours) descParts.push(`Hours ridden: ${bike.current_hours}h`);
+    if (bike.current_hours) descParts.push(`Hours ridden: ${Math.round(bike.current_hours * 10) / 10}h`);
     if (bike.is_ebike) descParts.push("E-bike: Yes");
     if (bike.serial_number) descParts.push(`Serial number: ${bike.serial_number}`);
     descParts.push("\nFull verified service history included via Bike Service Book.");
