@@ -45,6 +45,7 @@ export default async function ListingPage({
       .from("service_events")
       .select("id, service_date, service_type, description, cost")
       .eq("bike_id", listing.bike_id)
+      .not("service_type", "ilike", "edit")
       .order("service_date", { ascending: false })
       .limit(10);
     serviceEvents = eventsData || [];
@@ -96,21 +97,24 @@ export default async function ListingPage({
               {images.length > 0 ? (
                 <div>
                   <div className="h-72 w-full">
-                    <img
-                      src={images[0]}
-                      alt={listing.title}
-                      className="w-full h-full object-cover"
-                    />
+                    <a href={images[0]} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={images[0]}
+                        alt={listing.title}
+                        className="w-full h-full object-cover cursor-zoom-in"
+                      />
+                    </a>
                   </div>
                   {images.length > 1 && (
                     <div className="flex gap-2 p-2 overflow-x-auto">
                       {images.map((src: string, i: number) => (
-                        <img
-                          key={i}
-                          src={src}
-                          alt={"Photo " + (i + 1)}
-                          className="h-16 w-16 object-cover rounded-lg border border-gray-200 shrink-0"
-                        />
+                        <a key={i} href={src} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={src}
+                            alt={"Photo " + (i + 1)}
+                            className="h-16 w-16 object-cover rounded-lg border border-gray-200 shrink-0 cursor-zoom-in"
+                          />
+                        </a>
                       ))}
                     </div>
                   )}
@@ -341,7 +345,7 @@ export default async function ListingPage({
                   Ownership Transfer — R99
                 </p>
                 <p className="text-xs text-gray-500">
-                 {"Once you've bought this bike, pay R99 to officially transfer the service history into your BSB account."}
+                  {"Once you've bought this bike, pay R99 to officially transfer the service history into your BSB account."}
                 </p>
               </div>
             )}
