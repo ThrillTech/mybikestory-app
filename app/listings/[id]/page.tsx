@@ -318,15 +318,18 @@ export default async function ListingPage({
                 Arrange viewing and payment directly with the seller. MyBikeStory
                 does not handle payments.
               </p>
-              {listing.contact_email && (
-                
-                  href={`mailto:${listing.contact_email}?subject=${encodeURIComponent("Enquiry: " + listing.title)}`}
-                  className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
-                  style={{ backgroundColor: "#2376BE" }}
-                >
-                  ✉️ Email Seller
-                </a>
-              )}
+              {listing.contact_email && (() => {
+                const mailtoHref = "mailto:" + listing.contact_email + "?subject=Enquiry%3A%20" + encodeURIComponent(listing.title);
+                return (
+                  
+                    href={mailtoHref}
+                    className="w-full text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 mb-3"
+                    style={{ backgroundColor: "#2376BE" }}
+                  >
+                    ✉️ Email Seller
+                  </a>
+                );
+              })()}
               {listing.contact_phone && (
                 
                   href={`tel:${listing.contact_phone}`}
