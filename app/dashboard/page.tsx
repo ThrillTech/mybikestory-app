@@ -402,19 +402,13 @@ export default function DashboardPage() {
                 return (
                   <div className="space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Sale price</span>
+                      <span className="text-gray-600">Sale price (paid directly by buyer to you)</span>
                       <span className="font-semibold">{formatPrice(soldModal.listing.price)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Commission ({c.ratePercent})</span>
-                      <span className="font-semibold text-red-500">
+                    <div className="flex justify-between border-t border-blue-200 pt-2 mt-1">
+                      <span className="font-semibold text-gray-700">Commission owed to MyBikeStory ({c.ratePercent})</span>
+                      <span className="font-bold text-red-500">
                         R{c.commissionRands.toLocaleString("en-ZA")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between border-t border-blue-200 pt-1 mt-1">
-                      <span className="font-semibold text-gray-700">You receive</span>
-                      <span className="font-bold" style={{ color: "#2376BE" }}>
-                        R{(soldModal.listing.price / 100 - c.commissionRands).toLocaleString("en-ZA")}
                       </span>
                     </div>
                   </div>
@@ -465,9 +459,9 @@ export default function DashboardPage() {
             {/* Info box */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-5">
               <p className="font-semibold mb-1">What happens next:</p>
-              <p>• You'll receive an email with a commission invoice and Paystack payment link.</p>
-              <p>• The buyer will receive an email with instructions to claim the Bike Service Book history.</p>
-              <p>• Bike Service Book history transfers once both payments are confirmed.</p>
+              <p>• You will receive a commission invoice from MyBikeStory via email with a Paystack payment link.</p>
+              <p>• The buyer pays you directly. They will receive an email with instructions to claim the Bike Service Book history.</p>
+              <p>• Bike Service Book history transfers once the commission invoice is paid to MyBikeStory and the buyer pays the R99 transfer fee.</p>
             </div>
 
             {/* Error */}
