@@ -7,11 +7,18 @@ const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: "MyBikeStory — Buy & Sell Bikes with Verified History",
-  description:
-    "South Africa's only second-hand bike marketplace where service history transfers with the bike.",
+export const metadata = {
+  title: "MyBikeStory | Buy & Sell Second-Hand Bikes in South Africa",
+  description: "South Africa's trusted marketplace for second-hand bikes. Every listing includes verified service history from the Bike Service Book. Browse, buy, or sell today.",
+  keywords: ["second hand bikes SA", "used bikes South Africa", "buy sell bicycle", "bike service history"],
+  openGraph: {
+    title: "MyBikeStory",
+    description: "Buy and sell second-hand bikes with verified service history.",
+    url: "https://mybikestory.co.za",
+    siteName: "MyBikeStory",
+    locale: "en_ZA",
+    type: "website",
+  },
 };
 
 const poppins = Poppins({
