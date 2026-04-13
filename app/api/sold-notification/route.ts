@@ -285,13 +285,23 @@ export async function POST(req: Request) {
                 </tr>
               </table>
 
-              <!-- Sign up CTA -->
-              <table width="100%" cellpadding="0" cellspacing="0">
+              <!-- Sign up / Login CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
                 <tr>
                   <td align="center">
                     <a href="${BSB_URL}/auth/sign-up"
                        style="display:inline-block;background:#AA9F47;color:#ffffff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:10px;text-decoration:none;">
                       Create My Free Bike Service Book Account
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a href="${BSB_URL}/auth/sign-in"
+                       style="display:inline-block;background:#ffffff;color:#2376BE;font-size:14px;font-weight:700;padding:12px 36px;border-radius:10px;text-decoration:none;border:2px solid #2376BE;">
+                      Already have an account? Log In
                     </a>
                   </td>
                 </tr>
