@@ -34,11 +34,15 @@ export default function DashboardPage() {
   const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [justListed, setJustListed] = useState(false);
+  const [paymentBanner, setPaymentBanner] = useState<"success" | "failed" | "">("");
   const [soldModal, setSoldModal] = useState<SoldModalState | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("listed") === "true") setJustListed(true);
+    const payment = params.get("payment");
+    if (payment === "success") setPaymentBanner("success");
+    if (payment === "failed") setPaymentBanner("failed");
 
     async function load() {
       const supabase = createClient();
@@ -71,7 +75,6 @@ export default function DashboardPage() {
     router.push("/");
   };
 
-  // Open the Mark as Sold modal
   const openSoldModal = (listing: Listing) => {
     setSoldModal({
       listing,
@@ -83,7 +86,6 @@ export default function DashboardPage() {
     });
   };
 
-  // Submit the sold modal — saves sale record and sends emails
   const handleSoldSubmit = async () => {
     if (!soldModal) return;
     const { listing, buyerName, buyerEmail, buyerPhone } = soldModal;
@@ -126,7 +128,7 @@ export default function DashboardPage() {
       return;
     }
 
-    // 3. Create bike ownership record (if BSB linked)
+    // 3. Create bike ownership record (if Bike Service Book linked)
     if (listing.bike_id) {
       await supabase
         .from("bike_ownership")
@@ -163,7 +165,6 @@ export default function DashboardPage() {
     setSoldModal(null);
   };
 
-  // Revert sold listing back to available
   const handleRevertToAvailable = async (listingId: string) => {
     if (!confirm("Revert this listing back to available? This will cancel the recorded sale.")) return;
     const supabase = createClient();
@@ -173,7 +174,6 @@ export default function DashboardPage() {
       .update({ status: "active" })
       .eq("id", listingId);
 
-    // Cancel the sale record
     await supabase
       .from("mbs_sales")
       .update({ status: "cancelled" })
@@ -223,13 +223,25 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Success banner */}
+        {/* Listing success banner */}
         {justListed && (
           <div
             className="rounded-xl p-4 mb-6 text-sm font-medium"
             style={{ backgroundColor: "#EBF5FF", color: "#2376BE" }}
           >
             ✓ Your listing is live! Buyers can now find your bike on MyBikeStory.
+          </div>
+        )}
+
+        {/* Payment banners */}
+        {paymentBanner === "success" && (
+          <div className="rounded-xl p-4 mb-6 text-sm font-medium bg-green-50 text-green-700 border border-green-200">
+            ✅ Commission payment received! The buyer can now claim their Bike Service Book history.
+          </div>
+        )}
+        {paymentBanner === "failed" && (
+          <div className="rounded-xl p-4 mb-6 text-sm font-medium bg-red-50 text-red-600 border border-red-200">
+            ❌ Payment was not completed. Please try again from your sold listings.
           </div>
         )}
 
@@ -295,7 +307,7 @@ export default function DashboardPage() {
                         className="text-white text-xs px-2 py-0.5 rounded-full shrink-0"
                         style={{ backgroundColor: "#AA9F47" }}
                       >
-                        ✓ BSB
+                        ✓ Bike Service Book
                       </span>
                     )}
                   </div>
@@ -373,7 +385,6 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
 
-            {/* Modal header */}
             <h2 className="text-lg font-bold text-gray-900 mb-1">
               Mark as Sold
             </h2>
@@ -455,8 +466,8 @@ export default function DashboardPage() {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-5">
               <p className="font-semibold mb-1">What happens next:</p>
               <p>• You'll receive an email with a commission invoice and Paystack payment link.</p>
-              <p>• The buyer will receive an email with instructions to claim the BSB service history.</p>
-              <p>• BSB history transfers once both payments are confirmed.</p>
+              <p>• The buyer will receive an email with instructions to claim the Bike Service Book history.</p>
+              <p>• Bike Service Book history transfers once both payments are confirmed.</p>
             </div>
 
             {/* Error */}
