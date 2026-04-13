@@ -230,4 +230,14 @@ function CommissionPayContent() {
   );
 }
 
-export default function Commissi
+export default function CommissionPayPage() {
+  return (
+    <main className="min-h-screen bg-gray-50">
+      <MbsHeader />
+      <Suspense fallback={<div className="text-center py-20 text-gray-400">Loading...</div>}>
+        <CommissionPayContent />
+      </Suspense>
+      <MbsFooter />
+    </main>
+  );
+}
