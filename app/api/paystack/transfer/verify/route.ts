@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
+const BSB_DASHBOARD_URL = "https://www.bikeservicebook.com/dashboard";
 const BSB_SIGNUP_URL = "https://www.bikeservicebook.com/auth/sign-up";
 
 export async function GET(req: Request) {
@@ -29,6 +31,8 @@ export async function GET(req: Request) {
 
     const ownershipId = paystackData.data.metadata?.ownership_id;
     const saleId = paystackData.data.metadata?.sale_id;
+    const buyerEmail = paystackData.data.metadata?.buyer_email;
+    const redirectToBsb = paystackData.data.metadata?.redirect === "bsb";
 
     if (!ownershipId) {
       return NextResponse.redirect(new URL(BSB_SIGNUP_URL));
@@ -36,7 +40,7 @@ export async function GET(req: Request) {
 
     const supabase = await createClient();
 
-    // Mark transfer fee as paid
+    // 1. Mark transfer fee as paid
     await supabase
       .from("bike_ownership")
       .update({
@@ -46,7 +50,46 @@ export async function GET(req: Request) {
       })
       .eq("id", ownershipId);
 
-    // If both commission and transfer paid, mark sale as completed
+    // 2. Get the ownership record to find bike_id and owner_id
+    const { data: ownership } = await supabase
+      .from("bike_ownership")
+      .select("bike_id, owner_id, owner_email")
+      .eq("id", ownershipId)
+      .single();
+
+    if (ownership?.bike_id) {
+      // 3. Find buyer's BSB user ID by email using admin client
+      let buyerId = ownership.owner_id;
+
+      if (!buyerId && (buyerEmail || ownership.owner_email)) {
+        const email = buyerEmail || ownership.owner_email;
+        const adminClient = createAdminClient();
+        const { data: { users } } = await adminClient.auth.admin.listUsers();
+        const matchedUser = users?.find(
+          (u: any) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        if (matchedUser) buyerId = matchedUser.id;
+      }
+
+      if (buyerId) {
+        // 4. Transfer bike — update bikes.user_id to buyer
+        await supabase
+          .from("bikes")
+          .update({ user_id: buyerId })
+          .eq("id", ownership.bike_id);
+
+        // 5. Update ownership record with confirmed owner_id and owned_from date
+        await supabase
+          .from("bike_ownership")
+          .update({
+            owner_id: buyerId,
+            owned_from: new Date().toISOString(),
+          })
+          .eq("id", ownershipId);
+      }
+    }
+
+    // 6. If both commission and transfer paid, mark sale as completed
     if (saleId) {
       const { data: sale } = await supabase
         .from("mbs_sales")
@@ -62,8 +105,10 @@ export async function GET(req: Request) {
       }
     }
 
-    // Redirect buyer to BSB sign up
-    return NextResponse.redirect(new URL(BSB_SIGNUP_URL));
+    // 7. Redirect — BSB dashboard for existing users, BSB sign up for new users
+    const redirectUrl = redirectToBsb ? BSB_DASHBOARD_URL : BSB_SIGNUP_URL;
+    return NextResponse.redirect(new URL(redirectUrl));
+
   } catch (err) {
     console.error("Transfer verify error:", err);
     return NextResponse.redirect(new URL(BSB_SIGNUP_URL));
