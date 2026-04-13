@@ -36,7 +36,6 @@ export async function POST(req: Request) {
     } = payload;
 
     const salePriceRands = salePrice / 100;
-    const sellerReceives = salePriceRands - commissionAmount;
 
     // ── SELLER EMAIL ──────────────────────────────────────────────
     await resend.emails.send({
@@ -70,7 +69,7 @@ export async function POST(req: Request) {
               <h2 style="margin:0 0 8px;font-size:20px;color:#111827;font-weight:700;">Congratulations on your sale! 🎉</h2>
               <p style="margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.6;">
                 Your listing <strong style="color:#111827;">${listingTitle}</strong> has been marked as sold. 
-                Please pay your commission below to release the Bike Service Book history to the buyer.
+                Please pay the commission invoice below to release the Bike Service Book history to the buyer.
               </p>
 
               <!-- Invoice box -->
@@ -79,24 +78,25 @@ export async function POST(req: Request) {
                   <td style="padding:6px 0;">
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="font-size:13px;color:#6b7280;">Sale price</td>
+                        <td style="font-size:13px;color:#6b7280;">Sale price (paid directly by buyer to you)</td>
                         <td align="right" style="font-size:13px;font-weight:600;color:#111827;">R${salePriceRands.toLocaleString("en-ZA")}</td>
                       </tr>
                       <tr>
-                        <td style="font-size:13px;color:#6b7280;padding-top:8px;">Commission (${commissionRate})</td>
-                        <td align="right" style="font-size:13px;font-weight:600;color:#ef4444;padding-top:8px;">− R${commissionAmount.toLocaleString("en-ZA")}</td>
+                        <td colspan="2" style="border-top:1px solid #bfdbfe;padding-top:12px;margin-top:8px;"></td>
                       </tr>
                       <tr>
-                        <td colspan="2" style="border-top:1px solid #bfdbfe;padding-top:12px;margin-top:12px;"></td>
-                      </tr>
-                      <tr>
-                        <td style="font-size:15px;font-weight:700;color:#111827;">You receive</td>
-                        <td align="right" style="font-size:15px;font-weight:700;color:#2376BE;">R${sellerReceives.toLocaleString("en-ZA")}</td>
+                        <td style="font-size:15px;font-weight:700;color:#111827;">Commission owed to MyBikeStory (${commissionRate})</td>
+                        <td align="right" style="font-size:15px;font-weight:700;color:#ef4444;">R${commissionAmount.toLocaleString("en-ZA")}</td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
+
+              <!-- Note -->
+              <p style="margin:0 0 24px;color:#6b7280;font-size:13px;line-height:1.6;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;">
+                <strong style="color:#92400e;">Note:</strong> The buyer pays you directly for the bike. The commission above is owed separately to MyBikeStory and must be paid via the button below.
+              </p>
 
               <!-- Pay button -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
                   <td align="center">
                     <a href="${MBS_URL}/pay/commission?sale=${payload.saleId}"
                        style="display:inline-block;background:#2376BE;color:#ffffff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:10px;text-decoration:none;">
-                      Pay R${commissionAmount.toLocaleString("en-ZA")} Commission
+                      Pay R${commissionAmount.toLocaleString("en-ZA")} Commission to MyBikeStory
                     </a>
                   </td>
                 </tr>
