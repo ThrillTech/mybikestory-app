@@ -118,11 +118,11 @@ export function SignUpForm({
               {/* Phone */}
               <div className="grid gap-2">
                 <Label htmlFor="phone">Contact Number</Label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 min-w-0">
                   <select
                     value={phonePrefix}
                     onChange={(e) => setPhonePrefix(e.target.value)}
-                    className="px-2 py-2 border border-gray-300 rounded-lg text-sm bg-white w-24 shrink-0 focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
+                    className="px-2 py-2 border border-gray-300 rounded-lg text-sm bg-white w-20 shrink-0 focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
                   >
                     {COUNTRY_CODES.map((c) => (
                       <option key={c.code} value={c.code}>
