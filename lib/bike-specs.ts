@@ -1,28 +1,29 @@
 export const CATEGORIES: Record<string, string[]> = {
-  "Mountain Bikes": ["Hardtail", "Dual Suspension", "Downhill", "Dirt Jump", "Single Speed"],
-  "Road Bikes": ["Race", "Endurance", "Aero", "Touring", "Single Speed / Fixed"],
-  "Gravel Bikes": ["Gravel / Adventure", "Cyclocross"],
-  "Triathlon & Time Trial": ["Triathlon", "Time Trial"],
-  "Commuter & Urban": ["Commuter", "City / Hybrid", "Folding"],
-  "Kids Bikes": ["Kids MTB", "Kids Road", "Balance Bike"],
-  "E-Bikes": ["E-MTB", "E-Road", "E-Commuter"],
-  "BMX": ["BMX Race", "BMX Freestyle"],
+  "BMX": ["BMX Freestyle", "BMX Race"],
+  "Commuter & Urban": ["City / Hybrid", "Commuter", "Folding"],
+  "E-Bikes": ["E-Commuter", "E-MTB", "E-Road"],
+  "Gravel Bikes": ["Cyclocross", "Gravel / Adventure"],
+  "Kids Bikes": ["Balance Bike", "Kids MTB", "Kids Road"],
+  "Mountain Bikes": ["Dirt Jump", "Downhill", "Dual Suspension", "Hardtail", "Single Speed"],
+  "Road Bikes": ["Aero", "Endurance", "Race", "Single Speed / Fixed", "Touring"],
+  "Triathlon & Time Trial": ["Time Trial", "Triathlon"],
 };
 
 export const FRAME_SIZES = ["XS", "S", "S/M", "M", "M/L", "L", "XL", "XXL", "Custom", "Not sure"];
 
-export const WHEEL_SIZES = ["26\"", "27.5\"", "27.5+ (Plus)", "29\"", "700c", "650b", "24\"", "20\"", "16\"", "Not sure"];
+// Wheel sizes largest to smallest
+export const WHEEL_SIZES = ["32\"", "29\"", "27.5+ (Plus)", "27.5\"", "26\"", "700c", "650b", "24\"", "20\"", "16\"", "Not sure"];
 
-export const FRAME_MATERIALS = ["Carbon", "Aluminium", "Steel", "Titanium", "Chromoly", "Not sure"];
+export const FRAME_MATERIALS = ["Aluminium", "Carbon", "Chromoly", "Steel", "Titanium", "Not sure"];
 
-export const GROUPSET_BRANDS = ["Shimano", "SRAM", "Campagnolo", "microSHIFT", "Other", "Not sure"];
+export const GROUPSET_BRANDS = ["Campagnolo", "microSHIFT", "Shimano", "SRAM", "Other", "Not sure"];
 
-export const SHIMANO_LEVELS = ["Dura-Ace", "Ultegra", "105", "Tiagra", "Sora", "Claris", "XTR", "XT", "SLX", "Deore", "Alivio", "Altus", "Acera", "Tourney", "GRX", "Other"];
-export const SRAM_LEVELS = ["Red", "Force", "Rival", "Apex", "XX Eagle", "X01 Eagle", "GX Eagle", "NX Eagle", "SX Eagle", "Other"];
-export const CAMPAGNOLO_LEVELS = ["Super Record", "Record", "Chorus", "Potenza", "Centaur", "Veloce", "Other"];
+export const SHIMANO_LEVELS = ["Acera", "Alivio", "Altus", "Claris", "Deore", "Dura-Ace", "GRX", "Sora", "SLX", "Tiagra", "Tourney", "Ultegra", "XT", "XTR", "105", "Other"];
+export const SRAM_LEVELS = ["Apex", "Force", "GX Eagle", "NX Eagle", "Red", "Rival", "SX Eagle", "X01 Eagle", "XX Eagle", "Other"];
+export const CAMPAGNOLO_LEVELS = ["Centaur", "Chorus", "Potenza", "Record", "Super Record", "Veloce", "Other"];
 
-export const FORK_BRANDS = ["Fox", "RockShox", "Manitou", "Marzocchi", "DVO", "MRP", "X-Fusion", "SR Suntour", "Ohlins", "Rigid (no suspension)", "Other", "Not sure"];
+export const FORK_BRANDS = ["DVO", "Fox", "Lauf", "Manitou", "Marzocchi", "MRP", "Ohlins", "RockShox", "SR Suntour", "X-Fusion", "Rigid (no suspension)", "Other", "Not sure"];
 
-export const SHOCK_BRANDS = ["Fox", "RockShox", "Ohlins", "Manitou", "X-Fusion", "DVO", "N/A (Hardtail)", "Other", "Not sure"];
+export const SHOCK_BRANDS = ["Cane Creek", "DVO", "Fox", "Manitou", "Ohlins", "RockShox", "X-Fusion", "N/A (Hardtail)", "Other", "Not sure"];
 
 export const MODEL_YEARS = ["Not sure", ...Array.from({ length: 16 }, (_, i) => String(2025 - i))];
