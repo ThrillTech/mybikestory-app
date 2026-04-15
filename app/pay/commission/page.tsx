@@ -112,8 +112,7 @@ function CommissionPayContent() {
 
   const salePriceRands = sale ? sale.sale_price / 100 : 0;
   const commissionRands = sale ? sale.commission_amount / 100 : 0;
-  const sellerReceives = salePriceRands - commissionRands;
-
+  
   return (
     <div className="max-w-lg mx-auto px-5 py-12">
       {isLoading && (
@@ -184,13 +183,7 @@ function CommissionPayContent() {
                       − R{commissionRands.toLocaleString("en-ZA")}
                     </span>
                   </div>
-                  <div className="border-t border-gray-100 pt-3 flex justify-between">
-                    <span className="font-bold text-gray-900">You receive</span>
-                    <span className="font-bold text-lg" style={{ color: "#2376BE" }}>
-                      R{sellerReceives.toLocaleString("en-ZA")}
-                    </span>
                   </div>
-                </div>
               </div>
 
               <div className="p-6 border-b border-gray-100 bg-gray-50">
@@ -202,7 +195,7 @@ function CommissionPayContent() {
               <div className="p-6 border-b border-gray-100">
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-xs text-amber-800">
                   <p className="font-semibold mb-1">Important</p>
-                  <p>The buyer cannot claim the Bike Service Book history until commission is paid. Payment is securely processed by Paystack.</p>
+                  <p>Commission must be paid to complete the sale. Payment is securely processed by Paystack.</p>
                 </div>
               </div>
 
