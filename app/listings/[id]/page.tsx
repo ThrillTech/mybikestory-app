@@ -45,8 +45,11 @@ export default async function ListingPage({
   }
 
   const images: string[] = listing.images || [];
+  const listingUrl = `https://www.mybikestory.co.za/listings/${id}`;
+  const mailtoBody = `Hi,\n\nI am interested in your listing:\n${listing.title}\n${listingUrl}\n\nPlease let me know if it is still available.\n\nRegards`;
   const mailtoHref = listing.contact_email
-    ? "mailto:" + listing.contact_email + "?subject=Enquiry%3A%20" + encodeURIComponent(listing.title) : null;
+    ? "mailto:" + listing.contact_email + "?subject=" + encodeURIComponent("Enquiry: " + listing.title) + "&body=" + encodeURIComponent(mailtoBody)
+    : null;
   const telHref = listing.contact_phone ? "tel:" + listing.contact_phone : null;
   const displayCondition = listing.condition || bsbBike?.condition;
 
