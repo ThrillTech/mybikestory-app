@@ -63,6 +63,9 @@ export default async function ListingPage({
     : null;
   const telHref = listing.contact_phone ? "tel:" + listing.contact_phone : null;
 
+  // MBS condition overrides BSB condition
+  const displayCondition = listing.condition || bsbBike?.condition;
+
   return (
     <main className="min-h-screen bg-gray-50">
       <MbsHeader />
@@ -174,10 +177,10 @@ export default async function ListingPage({
                       <p className="font-medium text-gray-900">{bsbBike.year}</p>
                     </div>
                   )}
-                  {bsbBike.condition && (
+                  {displayCondition && (
                     <div>
                       <p className="text-gray-400 text-xs">Condition</p>
-                      <p className="font-medium text-gray-900 capitalize">{bsbBike.condition}</p>
+                      <p className="font-medium text-gray-900 capitalize">{displayCondition}</p>
                     </div>
                   )}
                   {bsbBike.current_hours != null && (
