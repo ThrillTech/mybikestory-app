@@ -100,13 +100,25 @@ export default function SellPage() {
   const levels = groupsetLevels(form.groupset_brand);
 
   useEffect(() => {
-    const loadBsbBikes = async () => {
+    const init = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
+
+      // Redirect to sign-up if not logged in
       if (!user) {
         router.push("/auth/sign-up?next=/sell");
         return;
       }
+
+      // Pre-fill contact details from user profile
+      const userPhone = user.user_metadata?.phone || "";
+      setForm((f) => ({
+        ...f,
+        contact_email: user.email || "",
+        contact_phone: userPhone,
+      }));
+
+      // Load BSB bikes
       const { data } = await supabase
         .from("bikes")
         .select("id, name, brand, model, year, condition, photo_urls, current_hours, is_ebike, serial_number")
@@ -115,7 +127,7 @@ export default function SellPage() {
       setBsbBikes(data || []);
       setBsbLoading(false);
     };
-    loadBsbBikes();
+    init();
   }, []);
 
   const handleBsbBikeSelect = (bikeId: string) => {
@@ -189,7 +201,7 @@ export default function SellPage() {
 
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/auth/login"); return; }
+    if (!user) { router.push("/auth/sign-up?next=/sell"); return; }
 
     const imageUrls: string[] = [];
     if (selectedBsbBike?.photo_urls) {
@@ -206,7 +218,6 @@ export default function SellPage() {
       imageUrls.push(urlData.publicUrl);
     }
 
-    // Resolve "Other" free-text values
     const finalGroupsetBrand = form.groupset_brand === "Other" ? form.groupset_brand_other || "Other" : form.groupset_brand;
     const finalForkBrand = form.fork_brand === "Other" ? form.fork_brand_other || "Other" : form.fork_brand;
     const finalShockBrand = form.rear_shock_brand === "Other" ? form.rear_shock_brand_other || "Other" : form.rear_shock_brand;
@@ -396,15 +407,15 @@ export default function SellPage() {
             </div>
           </div>
 
-          {/* Contact Details */}
+          {/* Contact Details — pre-filled, just confirm */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
             <div>
-              <h2 className="font-semibold text-gray-900 text-sm">Contact Details</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Shown to buyers to contact you directly.</p>
+              <h2 className="font-semibold text-gray-900 text-sm">Confirm Contact Details</h2>
+              <p className="text-xs text-gray-400 mt-0.5">These are shown to buyers. Update if needed.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" name="contact_email" value={form.contact_email} onChange={handleChange} placeholder="Defaults to your account email" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
+              <input type="email" name="contact_email" value={form.contact_email} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
