@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
-export default function MbsHeader() {
+export default async function MbsHeader() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <header className="w-full border-b border-gray-200 bg-white">
       <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
@@ -26,21 +30,43 @@ export default function MbsHeader() {
           >
             Sell Your Bike
           </Link>
-          <Link
-            href="/auth/sign-up"
-            className="text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
-          >
-            Sign Up Free
-          </Link>
-          <Link
-            href="/auth/sign-in"
-            className="text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
-          >
-            Sign In
-          </Link>
+
+          {user ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
+              >
+                Dashboard
+              </Link>
+              <form action="/auth/sign-out" method="post">
+                <button
+                  type="submit"
+                  className="text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/sign-up"
+                className="text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
+              >
+                Sign Up Free
+              </Link>
+              <Link
+                href="/auth/sign-in"
+                className="text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
+              >
+                Sign In
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Mobile nav — icon buttons only */}
+        {/* Mobile nav */}
         <div className="flex md:hidden items-center gap-2">
           <Link
             href="/listings"
@@ -54,18 +80,40 @@ export default function MbsHeader() {
           >
             Sell
           </Link>
-          <Link
-            href="/auth/sign-up"
-            className="text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
-          >
-            Sign Up
-          </Link>
-          <Link
-            href="/auth/sign-in"
-            className="text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
-          >
-            Sign In
-          </Link>
+
+          {user ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+              >
+                Dashboard
+              </Link>
+              <form action="/auth/sign-out" method="post">
+                <button
+                  type="submit"
+                  className="text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/sign-up"
+                className="text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+              >
+                Sign Up
+              </Link>
+              <Link
+                href="/auth/sign-in"
+                className="text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+              >
+                Sign In
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
