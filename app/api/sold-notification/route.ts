@@ -302,7 +302,7 @@ export async function POST(req: Request) {
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <a href="${BSB_URL}/auth/sign-in"
+                    <a href="${BSB_URL}/auth/login"
                        style="display:inline-block;background:#ffffff;color:#2376BE;font-size:14px;font-weight:700;padding:12px 36px;border-radius:10px;text-decoration:none;border:2px solid #2376BE;">
                       Already have an account? Log In
                     </a>
