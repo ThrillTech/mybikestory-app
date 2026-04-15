@@ -5,6 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import MbsHeader from "@/components/mbs-header";
 import { calculateCommission } from "@/lib/mbs-pricing";
 import Link from "next/link";
+import {
+  CATEGORIES, FRAME_SIZES, WHEEL_SIZES, FRAME_MATERIALS,
+  GROUPSET_BRANDS, SHIMANO_LEVELS, SRAM_LEVELS, CAMPAGNOLO_LEVELS,
+  FORK_BRANDS, SHOCK_BRANDS, MODEL_YEARS,
+} from "@/lib/bike-specs";
 
 const MAX_PHOTOS = 10;
 
@@ -21,6 +26,34 @@ interface BsbBike {
   serial_number: string | null;
 }
 
+function groupsetLevels(brand: string) {
+  if (brand === "Shimano") return SHIMANO_LEVELS;
+  if (brand === "SRAM") return SRAM_LEVELS;
+  if (brand === "Campagnolo") return CAMPAGNOLO_LEVELS;
+  return ["Other"];
+}
+
+const SelectField = ({
+  label, name, value, onChange, options, required, placeholder,
+}: {
+  label: string; name: string; value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: string[]; required?: boolean; placeholder?: string;
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <select
+      name={name} value={value} onChange={onChange} required={required}
+      className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE] bg-white"
+    >
+      <option value="">{placeholder || "Select..."}</option>
+      {options.map((o) => <option key={o} value={o}>{o}</option>)}
+    </select>
+  </div>
+);
+
 export default function SellPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,33 +63,30 @@ export default function SellPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedCommission, setAcceptedCommission] = useState(false);
 
-  // BSB linking state
   const [bsbBikes, setBsbBikes] = useState<BsbBike[]>([]);
   const [selectedBsbBike, setSelectedBsbBike] = useState<BsbBike | null>(null);
   const [bsbLoading, setBsbLoading] = useState(true);
   const [linkedBikeId, setLinkedBikeId] = useState<string | null>(null);
 
   const [form, setForm] = useState({
-    title: "",
-    price: "",
-    description: "",
-    location: "",
-    contact_email: "",
-    contact_phone: "",
+    title: "", price: "", description: "", location: "",
+    contact_email: "", contact_phone: "",
+    condition: "", category: "", sub_category: "",
+    frame_size: "", wheel_size: "", frame_material: "",
+    model_year: "", groupset_brand: "", groupset_level: "",
+    fork_brand: "", rear_shock_brand: "", has_dropper_post: "false",
   });
 
   const priceRands = parseInt(form.price) || 0;
   const commission = priceRands > 0 ? calculateCommission(priceRands) : null;
+  const subCategories = form.category ? CATEGORIES[form.category] || [] : [];
+  const levels = groupsetLevels(form.groupset_brand);
 
-  // Load BSB bikes on mount
   useEffect(() => {
     const loadBsbBikes = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setBsbLoading(false);
-        return;
-      }
+      if (!user) { setBsbLoading(false); return; }
       const { data } = await supabase
         .from("bikes")
         .select("id, name, brand, model, year, condition, photo_urls, current_hours, is_ebike, serial_number")
@@ -68,56 +98,47 @@ export default function SellPage() {
     loadBsbBikes();
   }, []);
 
-  // Auto-fill form when a BSB bike is selected
   const handleBsbBikeSelect = (bikeId: string) => {
     if (!bikeId) {
-      setSelectedBsbBike(null);
-      setLinkedBikeId(null);
+      setSelectedBsbBike(null); setLinkedBikeId(null);
       setForm((f) => ({ ...f, title: "", description: "" }));
-      setPhotos([]);
-      setPhotoPreviews([]);
+      setPhotos([]); setPhotoPreviews([]);
       return;
     }
     const bike = bsbBikes.find((b) => b.id === bikeId);
     if (!bike) return;
     setSelectedBsbBike(bike);
     setLinkedBikeId(bike.id);
-
-    // Auto-fill title
-    const title = [bike.year, bike.brand, bike.model]
-      .filter(Boolean)
-      .join(" ");
-
-    // Auto-fill description
+    const title = [bike.year, bike.brand, bike.model].filter(Boolean).join(" ");
     const descParts = [];
     if (bike.brand && bike.model) descParts.push(`${bike.brand} ${bike.model}`);
     if (bike.year) descParts.push(`Year: ${bike.year}`);
     if (bike.condition) descParts.push(`Condition: ${bike.condition}`);
-    if (bike.current_hours) descParts.push(`Hours ridden: ${Math.round(bike.current_hours * 10) / 10}h`);
     if (bike.is_ebike) descParts.push("E-bike: Yes");
     if (bike.serial_number) descParts.push(`Serial number: ${bike.serial_number}`);
     descParts.push("\nFull verified service history included via Bike Service Book.");
-    const description = descParts.join("\n");
-
-    setForm((f) => ({ ...f, title, description }));
-
-    // Load BSB photos as previews
+    setForm((f) => ({
+      ...f, title, description: descParts.join("\n"),
+      model_year: bike.year ? String(bike.year) : f.model_year,
+      category: bike.is_ebike ? "E-Bikes" : f.category,
+    }));
     if (bike.photo_urls && bike.photo_urls.length > 0) {
-      setPhotos([]);
-      setPhotoPreviews(bike.photo_urls.slice(0, MAX_PHOTOS));
+      setPhotos([]); setPhotoPreviews(bike.photo_urls.slice(0, MAX_PHOTOS));
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    if (e.target.name === "price") setAcceptedCommission(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm((f) => ({
+      ...f, [name]: value,
+      ...(name === "category" ? { sub_category: "" } : {}),
+      ...(name === "groupset_brand" ? { groupset_level: "" } : {}),
+    }));
+    if (name === "price") setAcceptedCommission(false);
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const currentCount = photos.length + photoPreviews.filter(p => p.startsWith("blob:") || p.startsWith("http")).length;
     const remaining = MAX_PHOTOS - photos.length - (selectedBsbBike ? (selectedBsbBike.photo_urls?.length || 0) : 0);
     if (files.length > remaining) {
       setError(`You can only add ${remaining} more photo${remaining === 1 ? "" : "s"} (max ${MAX_PHOTOS}).`);
@@ -125,12 +146,10 @@ export default function SellPage() {
     }
     setError(null);
     setPhotos((prev) => [...prev, ...files]);
-    const previews = files.map((f) => URL.createObjectURL(f));
-    setPhotoPreviews((prev) => [...prev, ...previews]);
+    setPhotoPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
   };
 
   const removePhoto = (index: number) => {
-    // If it's a BSB photo (no File object), remove from previews only
     if (index < (selectedBsbBike?.photo_urls?.length || 0) && photos.length === 0) {
       setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
     } else {
@@ -142,52 +161,26 @@ export default function SellPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!acceptedCommission) {
-      setError("Please accept the commission breakdown before publishing.");
-      return;
-    }
-    if (!acceptedTerms) {
-      setError("Please accept the Terms & Conditions before publishing.");
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
+    if (!acceptedCommission) { setError("Please accept the commission breakdown before publishing."); return; }
+    if (!acceptedTerms) { setError("Please accept the Terms & Conditions before publishing."); return; }
+    setIsLoading(true); setError(null);
 
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
+    if (!user) { router.push("/auth/login"); return; }
 
-    // Upload any new photos
     const imageUrls: string[] = [];
-
-    // First include BSB photos that weren't removed
     if (selectedBsbBike?.photo_urls) {
-      const bsbPhotoCount = selectedBsbBike.photo_urls.length;
-      for (let i = 0; i < bsbPhotoCount; i++) {
-        if (photoPreviews[i] === selectedBsbBike.photo_urls[i]) {
-          imageUrls.push(selectedBsbBike.photo_urls[i]);
-        }
+      for (let i = 0; i < selectedBsbBike.photo_urls.length; i++) {
+        if (photoPreviews[i] === selectedBsbBike.photo_urls[i]) imageUrls.push(selectedBsbBike.photo_urls[i]);
       }
     }
-
-    // Then upload new photos
     for (const photo of photos) {
       const ext = photo.name.split(".").pop();
       const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from("listing-images")
-        .upload(path, photo);
-      if (uploadError) {
-        setError(`Photo upload failed: ${uploadError.message}`);
-        setIsLoading(false);
-        return;
-      }
-      const { data: urlData } = supabase.storage
-        .from("listing-images")
-        .getPublicUrl(path);
+      const { error: uploadError } = await supabase.storage.from("listing-images").upload(path, photo);
+      if (uploadError) { setError(`Photo upload failed: ${uploadError.message}`); setIsLoading(false); return; }
+      const { data: urlData } = supabase.storage.from("listing-images").getPublicUrl(path);
       imageUrls.push(urlData.publicUrl);
     }
 
@@ -203,20 +196,24 @@ export default function SellPage() {
       images: imageUrls,
       status: "active",
       has_bsb_history: !!linkedBikeId,
+      condition: form.condition || null,
+      category: form.category || null,
+      sub_category: form.sub_category || null,
+      frame_size: form.frame_size || null,
+      wheel_size: form.wheel_size || null,
+      frame_material: form.frame_material || null,
+      model_year: form.model_year ? parseInt(form.model_year) : null,
+      groupset_brand: form.groupset_brand || null,
+      groupset_level: form.groupset_level || null,
+      fork_brand: form.fork_brand || null,
+      rear_shock_brand: form.rear_shock_brand || null,
+      has_dropper_post: form.has_dropper_post === "true",
     });
 
-    if (insertError) {
-      setError(insertError.message);
-      setIsLoading(false);
-      return;
-    }
+    if (insertError) { setError(insertError.message); setIsLoading(false); return; }
 
-    // Mark bike as listed for sale in BSB
     if (linkedBikeId) {
-      await supabase
-        .from("bikes")
-        .update({ listed_for_sale: true })
-        .eq("id", linkedBikeId);
+      await supabase.from("bikes").update({ listed_for_sale: true }).eq("id", linkedBikeId);
     }
 
     router.push("/dashboard?listed=true");
@@ -233,7 +230,7 @@ export default function SellPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* BSB Link Section */}
+          {/* BSB Link */}
           <div className="bg-white rounded-xl border-2 border-[#2376BE] p-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔗</span>
@@ -242,36 +239,25 @@ export default function SellPage() {
                 <p className="text-xs text-gray-400 mt-0.5">Auto-fill your listing and show verified service history to buyers.</p>
               </div>
             </div>
-
             {bsbLoading ? (
               <p className="text-xs text-gray-400">Loading your bikes...</p>
             ) : bsbBikes.length === 0 ? (
               <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-                No bikes found in your Bike Service Book account.{" "}
-                <a href="https://www.bikeservicebook.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold" style={{ color: "#2376BE" }}>
-                  Add your bike to BSB
-                </a>{" "}
-                to unlock verified listings.
+                No bikes found in your Bike Service Book.{" "}
+                <a href="https://www.bikeservicebook.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold" style={{ color: "#2376BE" }}>Add your bike to BSB</a>
               </div>
             ) : (
               <div>
-                <select
-                  onChange={(e) => handleBsbBikeSelect(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE] bg-white"
-                >
+                <select onChange={(e) => handleBsbBikeSelect(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE] bg-white">
                   <option value="">— Select a bike to auto-fill —</option>
                   {bsbBikes.map((bike) => (
-                    <option key={bike.id} value={bike.id}>
-                      {[bike.year, bike.brand, bike.model].filter(Boolean).join(" ") || bike.name}
-                    </option>
+                    <option key={bike.id} value={bike.id}>{[bike.year, bike.brand, bike.model].filter(Boolean).join(" ") || bike.name}</option>
                   ))}
                 </select>
                 {selectedBsbBike && (
                   <div className="mt-2 flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
                     <span className="text-green-600 text-sm">✓</span>
-                    <span className="text-xs text-green-700 font-medium">
-                      BSB Verified — listing auto-filled with service history
-                    </span>
+                    <span className="text-xs text-green-700 font-medium">BSB Verified — listing auto-filled with service history</span>
                   </div>
                 )}
               </div>
@@ -281,9 +267,7 @@ export default function SellPage() {
           {/* Photos */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
             <div>
-              <h2 className="font-semibold text-gray-900 text-sm">
-                Photos <span className="text-gray-400 font-normal">({photoPreviews.length}/{MAX_PHOTOS})</span>
-              </h2>
+              <h2 className="font-semibold text-gray-900 text-sm">Photos <span className="text-gray-400 font-normal">({photoPreviews.length}/{MAX_PHOTOS})</span></h2>
               <p className="text-xs text-gray-400 mt-0.5">First photo is the cover image.</p>
             </div>
             {photoPreviews.length > 0 && (
@@ -291,12 +275,8 @@ export default function SellPage() {
                 {photoPreviews.map((src, i) => (
                   <div key={i} className="relative aspect-square">
                     <img src={src} alt={`Photo ${i + 1}`} className="w-full h-full object-cover rounded-lg border border-gray-200" />
-                    {i === 0 && (
-                      <span className="absolute bottom-1 left-1 text-white text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor: "#2376BE" }}>Cover</span>
-                    )}
-                    {selectedBsbBike && selectedBsbBike.photo_urls?.includes(src) && (
-                      <span className="absolute top-1 left-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">BSB</span>
-                    )}
+                    {i === 0 && <span className="absolute bottom-1 left-1 text-white text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor: "#2376BE" }}>Cover</span>}
+                    {selectedBsbBike && selectedBsbBike.photo_urls?.includes(src) && <span className="absolute top-1 left-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">BSB</span>}
                     <button type="button" onClick={() => removePhoto(i)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold shadow">x</button>
                   </div>
                 ))}
@@ -329,13 +309,50 @@ export default function SellPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Asking Price (R) <span className="text-red-500">*</span></label>
               <input type="number" name="price" value={form.price} onChange={handleChange} required min="1" inputMode="numeric" placeholder="e.g. 8500" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
             </div>
+            <SelectField label="Condition" name="condition" value={form.condition} onChange={handleChange} options={["New", "Excellent", "Good", "Fair"]} placeholder="Select condition" />
+            <SelectField label="Category" name="category" value={form.category} onChange={handleChange} options={Object.keys(CATEGORIES)} placeholder="Select category" />
+            {subCategories.length > 0 && (
+              <SelectField label="Sub-category" name="sub_category" value={form.sub_category} onChange={handleChange} options={subCategories} placeholder="Select sub-category" />
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              <SelectField label="Model Year" name="model_year" value={form.model_year} onChange={handleChange} options={MODEL_YEARS.map(String)} placeholder="Year" />
+              <SelectField label="Frame Size" name="frame_size" value={form.frame_size} onChange={handleChange} options={FRAME_SIZES} placeholder="Size" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <SelectField label="Wheel Size" name="wheel_size" value={form.wheel_size} onChange={handleChange} options={WHEEL_SIZES} placeholder="Wheel size" />
+              <SelectField label="Frame Material" name="frame_material" value={form.frame_material} onChange={handleChange} options={FRAME_MATERIALS} placeholder="Material" />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Description <span className="text-red-500">*</span></label>
-              <textarea name="description" value={form.description} onChange={handleChange} required rows={4} placeholder="Condition, components, size, any damage, reason for selling..." className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
+              <textarea name="description" value={form.description} onChange={handleChange} required rows={4} placeholder="Any extras, damage, reason for selling..." className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Location <span className="text-red-500">*</span></label>
               <input type="text" name="location" value={form.location} onChange={handleChange} required placeholder="e.g. Sandton, Johannesburg" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]" />
+            </div>
+          </div>
+
+          {/* Components */}
+          <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
+            <h2 className="font-semibold text-gray-900 text-sm">Components</h2>
+            <SelectField label="Groupset Brand" name="groupset_brand" value={form.groupset_brand} onChange={handleChange} options={GROUPSET_BRANDS} placeholder="Select brand" />
+            {form.groupset_brand && (
+              <SelectField label="Groupset Level" name="groupset_level" value={form.groupset_level} onChange={handleChange} options={levels} placeholder="Select level" />
+            )}
+            <SelectField label="Fork Brand" name="fork_brand" value={form.fork_brand} onChange={handleChange} options={FORK_BRANDS} placeholder="Select fork brand" />
+            <SelectField label="Rear Shock Brand" name="rear_shock_brand" value={form.rear_shock_brand} onChange={handleChange} options={SHOCK_BRANDS} placeholder="Select shock brand" />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dropper Post</label>
+              <div className="flex gap-4 mt-1">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="has_dropper_post" value="true" checked={form.has_dropper_post === "true"} onChange={handleChange} className="accent-[#2376BE]" />
+                  <span className="text-sm text-gray-700">Yes</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="has_dropper_post" value="false" checked={form.has_dropper_post === "false"} onChange={handleChange} className="accent-[#2376BE]" />
+                  <span className="text-sm text-gray-700">No</span>
+                </label>
+              </div>
             </div>
           </div>
 
@@ -355,7 +372,7 @@ export default function SellPage() {
             </div>
           </div>
 
-          {/* Commission breakdown */}
+          {/* Commission */}
           {commission && (
             <div className="bg-white rounded-xl border-2 p-4 space-y-3" style={{ borderColor: "#2376BE" }}>
               <h2 className="font-bold text-sm" style={{ color: "#2376BE" }}>Commission Breakdown</h2>
@@ -365,7 +382,7 @@ export default function SellPage() {
                   <span className="font-semibold text-gray-900">R{priceRands.toLocaleString("en-ZA")}</span>
                 </div>
                 <div className="flex justify-between border-t border-gray-200 pt-2">
-                  <span className="text-gray-600">Commission ({commission.ratePercent}) payable to MyBikeStory</span>
+                  <span className="text-gray-600">Commission ({commission.ratePercent})</span>
                   <span className="font-semibold text-red-500">R{commission.commissionRands.toLocaleString("en-ZA")}</span>
                 </div>
               </div>
@@ -381,23 +398,19 @@ export default function SellPage() {
             </div>
           )}
 
-          {/* T&C acceptance */}
+          {/* T&C */}
           <div className="bg-white rounded-xl border border-gray-200 p-4">
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} className="mt-0.5 w-4 h-4 rounded accent-[#2376BE]" />
               <span className="text-xs text-gray-700">
                 {"I have read and agree to the "}
-                <Link href="/terms" target="_blank" className="underline font-semibold" style={{ color: "#2376BE" }}>
-                  Terms and Conditions
-                </Link>
+                <Link href="/terms" target="_blank" className="underline font-semibold" style={{ color: "#2376BE" }}>Terms and Conditions</Link>
                 {", including the POPIA privacy clauses. I confirm this bike belongs to me and the listing is accurate."}
               </span>
             </label>
           </div>
 
-          {error && (
-            <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-lg">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-lg">{error}</p>}
 
           <button
             type="submit"
