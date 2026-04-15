@@ -110,7 +110,7 @@ export default function SellPage() {
     setSelectedBsbBike(bike);
     setLinkedBikeId(bike.id);
     const title = [bike.year, bike.brand, bike.model].filter(Boolean).join(" ");
-    const descParts = [];
+    const descParts: string[] = [];
     if (bike.brand && bike.model) descParts.push(`${bike.brand} ${bike.model}`);
     if (bike.year) descParts.push(`Year: ${bike.year}`);
     if (bike.condition) descParts.push(`Condition: ${bike.condition}`);
