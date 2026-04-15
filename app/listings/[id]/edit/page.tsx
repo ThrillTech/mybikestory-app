@@ -31,6 +31,7 @@ export default function EditListingPage() {
     location: "",
     contact_email: "",
     contact_phone: "",
+    condition: "",
   });
 
   const priceRands = parseInt(form.price) || 0;
@@ -65,6 +66,7 @@ export default function EditListingPage() {
         location: listing.location || "",
         contact_email: listing.contact_email || "",
         contact_phone: listing.contact_phone || "",
+        condition: listing.condition || "",
       });
       setExistingImages(listing.images || []);
       setIsLoading(false);
@@ -73,7 +75,7 @@ export default function EditListingPage() {
   }, [id, router]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -143,6 +145,7 @@ export default function EditListingPage() {
         location: form.location,
         contact_email: form.contact_email,
         contact_phone: form.contact_phone,
+        condition: form.condition,
         images: allImages,
         updated_at: new Date().toISOString(),
       })
@@ -320,6 +323,24 @@ export default function EditListingPage() {
                   {"Commission: " + commission.ratePercent + " = R" + commission.commissionRands.toLocaleString("en-ZA") + " payable when sold"}
                 </p>
               )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Condition <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="condition"
+                value={form.condition}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
+              >
+                <option value="">Select condition</option>
+                <option value="new">New</option>
+                <option value="excellent">Excellent</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
