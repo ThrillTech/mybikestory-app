@@ -103,7 +103,10 @@ export default function SellPage() {
     const loadBsbBikes = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setBsbLoading(false); return; }
+      if (!user) {
+        router.push("/auth/sign-up?next=/sell");
+        return;
+      }
       const { data } = await supabase
         .from("bikes")
         .select("id, name, brand, model, year, condition, photo_urls, current_hours, is_ebike, serial_number")
