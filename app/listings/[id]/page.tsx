@@ -36,7 +36,7 @@ export default async function ListingPage({
   if (listing.bike_id) {
     const { data: bikeData } = await supabase
       .from("bikes")
-      .select("id, brand, model, year, condition, current_hours, serial_number, is_ebike")
+      .select("id, brand, model, year, condition, serial_number, is_ebike")
       .eq("id", listing.bike_id)
       .single();
     bsbBike = bikeData;
@@ -181,14 +181,6 @@ export default async function ListingPage({
                     <div>
                       <p className="text-gray-400 text-xs">Condition</p>
                       <p className="font-medium text-gray-900 capitalize">{displayCondition}</p>
-                    </div>
-                  )}
-                  {bsbBike.current_hours != null && (
-                    <div>
-                      <p className="text-gray-400 text-xs">Hours Ridden</p>
-                      <p className="font-medium text-gray-900">
-                        {Math.round(bsbBike.current_hours * 10) / 10}h
-                      </p>
                     </div>
                   )}
                   {bsbBike.is_ebike && (
