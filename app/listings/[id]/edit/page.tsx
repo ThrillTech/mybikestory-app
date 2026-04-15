@@ -41,6 +41,21 @@ const SelectField = ({
   </div>
 );
 
+const OtherInput = ({ name, value, onChange, placeholder }: {
+  name: string; value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">Please specify</label>
+    <input
+      type="text" name={name} value={value} onChange={onChange}
+      placeholder={placeholder}
+      className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2376BE]"
+    />
+  </div>
+);
+
 export default function EditListingPage() {
   const router = useRouter();
   const params = useParams();
@@ -60,13 +75,20 @@ export default function EditListingPage() {
     condition: "", category: "", sub_category: "",
     frame_size: "", wheel_size: "", frame_material: "",
     model_year: "", groupset_brand: "", groupset_level: "",
-    fork_brand: "", rear_shock_brand: "", has_dropper_post: "false",
+    groupset_brand_other: "", fork_brand: "", fork_brand_other: "",
+    rear_shock_brand: "", rear_shock_brand_other: "",
+    has_dropper_post: "false",
   });
 
   const priceRands = parseInt(form.price) || 0;
   const commission = priceRands > 0 ? calculateCommission(priceRands) : null;
   const subCategories = form.category ? CATEGORIES[form.category] || [] : [];
   const levels = groupsetLevels(form.groupset_brand);
+
+  // Known brands from the list — if DB value isn't in list, it was an "Other" free-text entry
+  const knownGroupsetBrands = GROUPSET_BRANDS.filter((b) => b !== "Other" && b !== "Not sure");
+  const knownForkBrands = FORK_BRANDS.filter((b) => b !== "Other" && b !== "Not sure");
+  const knownShockBrands = SHOCK_BRANDS.filter((b) => b !== "Other" && b !== "Not sure");
 
   useEffect(() => {
     const load = async () => {
@@ -78,6 +100,14 @@ export default function EditListingPage() {
         .from("listings").select("*").eq("id", id).eq("user_id", user.id).single();
 
       if (!listing) { setNotFound(true); setIsLoading(false); return; }
+
+      // Detect if stored value was an "Other" free-text entry
+      const storedGroupset = listing.groupset_brand || "";
+      const isGroupsetOther = storedGroupset && !knownGroupsetBrands.includes(storedGroupset);
+      const storedFork = listing.fork_brand || "";
+      const isForkOther = storedFork && !knownForkBrands.includes(storedFork);
+      const storedShock = listing.rear_shock_brand || "";
+      const isShockOther = storedShock && !knownShockBrands.includes(storedShock);
 
       setForm({
         title: listing.title || "",
@@ -93,10 +123,13 @@ export default function EditListingPage() {
         wheel_size: listing.wheel_size || "",
         frame_material: listing.frame_material || "",
         model_year: listing.model_year ? String(listing.model_year) : "",
-        groupset_brand: listing.groupset_brand || "",
+        groupset_brand: isGroupsetOther ? "Other" : storedGroupset,
+        groupset_brand_other: isGroupsetOther ? storedGroupset : "",
         groupset_level: listing.groupset_level || "",
-        fork_brand: listing.fork_brand || "",
-        rear_shock_brand: listing.rear_shock_brand || "",
+        fork_brand: isForkOther ? "Other" : storedFork,
+        fork_brand_other: isForkOther ? storedFork : "",
+        rear_shock_brand: isShockOther ? "Other" : storedShock,
+        rear_shock_brand_other: isShockOther ? storedShock : "",
         has_dropper_post: listing.has_dropper_post ? "true" : "false",
       });
       setExistingImages(listing.images || []);
@@ -110,7 +143,9 @@ export default function EditListingPage() {
     setForm((f) => ({
       ...f, [name]: value,
       ...(name === "category" ? { sub_category: "" } : {}),
-      ...(name === "groupset_brand" ? { groupset_level: "" } : {}),
+      ...(name === "groupset_brand" ? { groupset_level: "", groupset_brand_other: "" } : {}),
+      ...(name === "fork_brand" ? { fork_brand_other: "" } : {}),
+      ...(name === "rear_shock_brand" ? { rear_shock_brand_other: "" } : {}),
     }));
   };
 
@@ -148,6 +183,11 @@ export default function EditListingPage() {
       uploadedUrls.push(urlData.publicUrl);
     }
 
+    // Resolve "Other" free-text values
+    const finalGroupsetBrand = form.groupset_brand === "Other" ? form.groupset_brand_other || "Other" : form.groupset_brand;
+    const finalForkBrand = form.fork_brand === "Other" ? form.fork_brand_other || "Other" : form.fork_brand;
+    const finalShockBrand = form.rear_shock_brand === "Other" ? form.rear_shock_brand_other || "Other" : form.rear_shock_brand;
+
     const { error: updateError } = await supabase.from("listings").update({
       title: form.title,
       price: priceRands * 100,
@@ -161,11 +201,11 @@ export default function EditListingPage() {
       frame_size: form.frame_size || null,
       wheel_size: form.wheel_size || null,
       frame_material: form.frame_material || null,
-      model_year: form.model_year ? parseInt(form.model_year) : null,
-      groupset_brand: form.groupset_brand || null,
+      model_year: form.model_year && form.model_year !== "Not sure" ? parseInt(form.model_year) : null,
+      groupset_brand: finalGroupsetBrand || null,
       groupset_level: form.groupset_level || null,
-      fork_brand: form.fork_brand || null,
-      rear_shock_brand: form.rear_shock_brand || null,
+      fork_brand: finalForkBrand || null,
+      rear_shock_brand: finalShockBrand || null,
       has_dropper_post: form.has_dropper_post === "true",
       images: [...existingImages, ...uploadedUrls],
       updated_at: new Date().toISOString(),
@@ -266,7 +306,7 @@ export default function EditListingPage() {
               <SelectField label="Sub-category" name="sub_category" value={form.sub_category} onChange={handleChange} options={subCategories} placeholder="Select sub-category" />
             )}
             <div className="grid grid-cols-2 gap-3">
-              <SelectField label="Model Year" name="model_year" value={form.model_year} onChange={handleChange} options={MODEL_YEARS.map(String)} placeholder="Year" />
+              <SelectField label="Model Year" name="model_year" value={form.model_year} onChange={handleChange} options={MODEL_YEARS} placeholder="Select year" />
               <SelectField label="Frame Size" name="frame_size" value={form.frame_size} onChange={handleChange} options={FRAME_SIZES} placeholder="Size" />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -286,12 +326,25 @@ export default function EditListingPage() {
           {/* Components */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
             <h2 className="font-semibold text-gray-900 text-sm">Components</h2>
+
             <SelectField label="Groupset Brand" name="groupset_brand" value={form.groupset_brand} onChange={handleChange} options={GROUPSET_BRANDS} placeholder="Select brand" />
-            {form.groupset_brand && (
+            {form.groupset_brand === "Other" && (
+              <OtherInput name="groupset_brand_other" value={form.groupset_brand_other} onChange={handleChange} placeholder="e.g. Box Components" />
+            )}
+            {form.groupset_brand && form.groupset_brand !== "Not sure" && form.groupset_brand !== "Other" && (
               <SelectField label="Groupset Level" name="groupset_level" value={form.groupset_level} onChange={handleChange} options={levels} placeholder="Select level" />
             )}
+
             <SelectField label="Fork Brand" name="fork_brand" value={form.fork_brand} onChange={handleChange} options={FORK_BRANDS} placeholder="Select fork brand" />
+            {form.fork_brand === "Other" && (
+              <OtherInput name="fork_brand_other" value={form.fork_brand_other} onChange={handleChange} placeholder="e.g. Lauf Grit" />
+            )}
+
             <SelectField label="Rear Shock Brand" name="rear_shock_brand" value={form.rear_shock_brand} onChange={handleChange} options={SHOCK_BRANDS} placeholder="Select shock brand" />
+            {form.rear_shock_brand === "Other" && (
+              <OtherInput name="rear_shock_brand_other" value={form.rear_shock_brand_other} onChange={handleChange} placeholder="e.g. Cane Creek" />
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Dropper Post</label>
               <div className="flex gap-4 mt-1">
