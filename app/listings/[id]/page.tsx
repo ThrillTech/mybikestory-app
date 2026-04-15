@@ -334,17 +334,7 @@ export default async function ListingPage({
               </div>
             </div>
 
-            {listing.has_bsb_history && (
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <p className="text-xs font-semibold mb-1" style={{ color: "#AA9F47" }}>
-                  Ownership Transfer — R99
-                </p>
-                <p className="text-xs text-gray-500">
-                  {"Once you've bought this bike, pay R99 to officially transfer the service history into your BSB account."}
-                </p>
-              </div>
-            )}
-          </div>
+            </div>
 
         </div>
       </div>
