@@ -68,8 +68,9 @@ export async function POST(req: Request) {
             <td style="padding:36px 40px;">
               <h2 style="margin:0 0 8px;font-size:20px;color:#111827;font-weight:700;">Congratulations on your sale! 🎉</h2>
               <p style="margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.6;">
-                Your listing <strong style="color:#111827;">${listingTitle}</strong> has been marked as sold. 
-                Please pay the commission invoice below to release the Bike Service Book history to the buyer.
+               Your listing <strong style="color:#111827;">${listingTitle}</strong> has been marked as sold. 
+                Please pay the commission invoice below to complete the sale.
+                ${hasBsbHistory ? `Once paid, the buyer will be able to claim the Bike Service Book history into their account.` : ""}
               </p>
 
               <!-- Invoice box -->
@@ -115,9 +116,11 @@ export async function POST(req: Request) {
 
               <!-- Bike Service Book upsell -->
               <h3 style="margin:0 0 8px;font-size:16px;color:#111827;font-weight:700;">Ready for your next bike? 🚲</h3>
-              <p style="margin:0 0 20px;color:#6b7280;font-size:14px;line-height:1.6;">
-                Thank you for being part of the Bike Service Book community. Start building the service history 
-                for your next bike today — buyers pay more for bikes with a verified Bike Service Book record.
+             <p style="margin:0 0 20px;color:#6b7280;font-size:14px;line-height:1.6;">
+                ${hasBsbHistory 
+                  ? `Thank you for being part of the Bike Service Book community. Start building the service history for your next bike today — buyers pay more for bikes with a verified Bike Service Book record.`
+                  : `Want to get a better price next time? Start a Bike Service Book for your next bike — verified service history helps bikes sell faster and for more.`
+                }
               </p>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
