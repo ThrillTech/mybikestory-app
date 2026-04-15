@@ -1,9 +1,82 @@
+"use client";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
-export default async function MbsHeader() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export default function MbsHeader() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
+
+  const AuthButtons = ({ mobile }: { mobile?: boolean }) => {
+    if (loading) return null;
+    if (isLoggedIn) {
+      return (
+        <>
+          <Link
+            href="/dashboard"
+            className={
+              mobile
+                ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+                : "text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
+            }
+          >
+            Dashboard
+          </Link>
+          <button
+            onClick={handleSignOut}
+            className={
+              mobile
+                ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+                : "text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
+            }
+          >
+            Sign Out
+          </button>
+        </>
+      );
+    }
+    return (
+      <>
+        <Link
+          href="/auth/sign-up"
+          className={
+            mobile
+              ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+              : "text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
+          }
+        >
+          {mobile ? "Sign Up" : "Sign Up Free"}
+        </Link>
+        <Link
+          href="/auth/sign-in"
+          className={
+            mobile
+              ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+              : "text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
+          }
+        >
+          Sign In
+        </Link>
+      </>
+    );
+  };
 
   return (
     <header className="w-full border-b border-gray-200 bg-white">
@@ -30,40 +103,7 @@ export default async function MbsHeader() {
           >
             Sell Your Bike
           </Link>
-
-          {user ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
-              >
-                Dashboard
-              </Link>
-              <form action="/auth/sign-out" method="post">
-                <button
-                  type="submit"
-                  className="text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
-                >
-                  Sign Out
-                </button>
-              </form>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/auth/sign-up"
-                className="text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
-              >
-                Sign Up Free
-              </Link>
-              <Link
-                href="/auth/sign-in"
-                className="text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
-              >
-                Sign In
-              </Link>
-            </>
-          )}
+          <AuthButtons />
         </div>
 
         {/* Mobile nav */}
@@ -80,40 +120,7 @@ export default async function MbsHeader() {
           >
             Sell
           </Link>
-
-          {user ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
-              >
-                Dashboard
-              </Link>
-              <form action="/auth/sign-out" method="post">
-                <button
-                  type="submit"
-                  className="text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
-                >
-                  Sign Out
-                </button>
-              </form>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/auth/sign-up"
-                className="text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
-              >
-                Sign Up
-              </Link>
-              <Link
-                href="/auth/sign-in"
-                className="text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
-              >
-                Sign In
-              </Link>
-            </>
-          )}
+          <AuthButtons mobile />
         </div>
       </div>
     </header>
