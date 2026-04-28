@@ -104,9 +104,9 @@ export default function Home() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <img
-              src="/MyBikeStory_logo.png"
+              src="/MyBikeStory_logo.V2.png"
               alt="MyBikeStory"
-              className="h-20 w-auto"
+              className="h-18 w-auto"
             />
             <span className="text-gray-300 text-2xl font-light">×</span>
             <a href="https://www.bikeservicebook.com" target="_blank" rel="noreferrer">
