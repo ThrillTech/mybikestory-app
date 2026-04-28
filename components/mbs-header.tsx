@@ -107,7 +107,7 @@ export default function MbsHeader() {
         <div className="flex justify-center">
           <Link href="/">
             <img
-              src="/MyBikeStory_logo.png"
+              src="/MyBikeStory_logo.V2.png"
               alt="MyBikeStory"
               className="h-12 w-auto"
             />
