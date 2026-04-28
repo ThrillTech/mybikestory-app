@@ -85,7 +85,7 @@ export default function MbsHeader() {
       <div className="hidden md:flex max-w-6xl mx-auto px-4 h-24 items-center justify-between">
         <Link href="/" className="flex items-center">
           <img
-            src="/MyBikeStory_logo.png"
+            src="/MyBikeStory_logo.V2.png"
             alt="MyBikeStory"
             className="h-16 w-auto"
           />
