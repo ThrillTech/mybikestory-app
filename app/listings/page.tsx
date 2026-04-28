@@ -59,7 +59,7 @@ async function ListingsGrid({
           <div className="p-4">
             {listing.has_bsb_history && (
               <span className="inline-flex items-center gap-1 text-white text-xs font-semibold px-2 py-1 rounded-full mb-2" style={{ backgroundColor: "#AA9F47" }}>
-                ✓ BSB Verified
+                ✓ Bike Service Book Verified
               </span>
             )}
             <h3 className="font-semibold text-gray-900 mb-1">{listing.title}</h3>
