@@ -33,7 +33,7 @@ export default function MbsHeader() {
             href="/dashboard"
             className={
               mobile
-                ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+                ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-1.5 rounded-lg"
                 : "text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
             }
           >
@@ -43,7 +43,7 @@ export default function MbsHeader() {
             onClick={handleSignOut}
             className={
               mobile
-                ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+                ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-1.5 rounded-lg"
                 : "text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
             }
           >
@@ -58,7 +58,7 @@ export default function MbsHeader() {
           href="/auth/sign-up"
           className={
             mobile
-              ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-2 rounded-lg"
+              ? "text-xs font-semibold border-2 border-[#2376BE] text-[#2376BE] px-3 py-1.5 rounded-lg"
               : "text-sm font-semibold border-2 border-[#2376BE] text-[#2376BE] px-4 py-2 rounded-lg hover:bg-[#EBF5FF] transition-colors"
           }
         >
@@ -68,7 +68,7 @@ export default function MbsHeader() {
           href="/auth/sign-in"
           className={
             mobile
-              ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-2 rounded-lg"
+              ? "text-xs font-semibold bg-[#2376BE] text-white px-3 py-1.5 rounded-lg"
               : "text-sm font-semibold bg-[#2376BE] text-white px-4 py-2 rounded-lg hover:bg-[#1a5a94] transition-colors"
           }
         >
@@ -80,49 +80,51 @@ export default function MbsHeader() {
 
   return (
     <header className="w-full border-b border-gray-200 bg-white">
-      <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center shrink-0">
+
+      {/* ── Desktop header (md and up) ── */}
+      <div className="hidden md:flex max-w-6xl mx-auto px-4 h-24 items-center justify-between">
+        <Link href="/" className="flex items-center">
           <img
             src="/MyBikeStory_logo.png"
             alt="MyBikeStory"
-            className="h-24 w-auto"
+            className="h-16 w-auto"
           />
         </Link>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link
-            href="/listings"
-            className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors"
-          >
+        <div className="flex items-center gap-6">
+          <Link href="/listings" className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors">
             Browse Bikes
           </Link>
-          <Link
-            href="/sell"
-            className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors"
-          >
+          <Link href="/sell" className="text-sm font-medium text-gray-600 hover:text-[#2376BE] transition-colors">
             Sell Your Bike
           </Link>
           <AuthButtons />
         </div>
+      </div>
 
-        {/* Mobile nav */}
-        <div className="flex md:hidden items-center gap-2">
-          <Link
-            href="/listings"
-            className="text-xs font-medium text-gray-600 px-3 py-2 rounded-lg border border-gray-200"
-          >
+      {/* ── Mobile header (below md): two rows ── */}
+      <div className="flex md:hidden flex-col px-4 py-2 gap-2">
+        {/* Row 1: logo centred */}
+        <div className="flex justify-center">
+          <Link href="/">
+            <img
+              src="/MyBikeStory_logo.png"
+              alt="MyBikeStory"
+              className="h-12 w-auto"
+            />
+          </Link>
+        </div>
+        {/* Row 2: nav links + auth buttons, all in one scrollable row */}
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <Link href="/listings" className="text-xs font-medium text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200">
             Browse
           </Link>
-          <Link
-            href="/sell"
-            className="text-xs font-medium text-gray-600 px-3 py-2 rounded-lg border border-gray-200"
-          >
+          <Link href="/sell" className="text-xs font-medium text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200">
             Sell
           </Link>
           <AuthButtons mobile />
         </div>
       </div>
+
     </header>
   );
 }
