@@ -31,12 +31,19 @@ export const metadata: Metadata = {
     siteName: "MyBikeStory",
     locale: "en_ZA",
     type: "website",
+    images: [
+      {
+        url: "/MyBikeStory_logo.V2.png",
+        alt: "MyBikeStory | Buy & Sell Second-Hand Bikes in South Africa",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "MyBikeStory | Buy & Sell Second-Hand Bikes in South Africa",
     description:
       "South Africa's trusted marketplace for second-hand bikes with verified service history.",
+    images: ["/MyBikeStory_logo.V2.png"],
   },
   alternates: {
     canonical: "https://www.mybikestory.co.za",
