@@ -5,6 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mybikestory.co.za"),
+  manifest: "/site.webmanifest",
   title: {
     default: "MyBikeStory | Buy & Sell Second-Hand Bikes in South Africa",
     template: "%s | MyBikeStory",
