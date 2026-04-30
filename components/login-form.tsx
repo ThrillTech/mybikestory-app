@@ -49,7 +49,7 @@ export function LoginForm({
       <Card>
         <CardHeader className="text-center">
           <img
-            src="/MyBikeStory_logo.png"
+            src="/MyBikeStory_logo.V2.png"
             alt="MyBikeStory"
             className="h-16 w-auto mx-auto mb-2"
           />
